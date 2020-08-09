@@ -78,16 +78,18 @@ inline int pmod(int x, int divisor){int m = x % divisor;return m + ((m >> 31) & 
 const int _n=2e5+10,MAXB=19;
 int n,ans[_n];
 ll s[_n];
-  ll t[_n];
-  void update(int x,int val){while(x<=N)t[x]+=val,x+=(x&-x);}
-  ll query(int x){ll res=0;while(x>0)res+=t[x],x-=(x&-x);return res;}
-
+namespace BIT{
+  int nn;ll t[_n];
+  void update(int x,int val){while(x<=nn)t[x]+=val,x+=(x&-x);}
+  ll query(int x){ll res=0;while(x>0){res+=t[x],x-=(x&-x);}return res;}
+  void init(int n_){nn=n_;}
+}
 main(void) {cin.tie(0);ios_base::sync_with_stdio(0);
-  cin>>n;rep(i,1,n+1){cin>>s[i];update(i,i);}
+  cin>>n;BIT::init(n);rep(i,1,n+1){cin>>s[i];BIT::update(i,i);}
   per(i,1,n+1){
     int res=0;
-    per(j,0,MAXB)if(res+(1<<j)<=n and query(res+(1<<j))<=s[i])res+=(1<<j);
-    ans[i]=res+1;update(res+1,-res-1);
+    per(j,0,MAXB)if(res+(1<<j)<=n and BIT::query(res+(1<<j))<=s[i])res+=(1<<j);
+    ans[i]=res+1;BIT::update(res+1,-res-1);
   }rep(i,1,n+1)cout<<ans[i]<<' '; cout<<'\n';
   return 0;
 }
