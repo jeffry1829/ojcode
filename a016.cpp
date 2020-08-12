@@ -1,13 +1,33 @@
-#include <bits/stdc++.h>
+#include<iostream>
+#include<string>
+#include<string.h>
 using namespace std;
 
-main(void) {
-  cin.tie(0);
-  ios_base::sync_with_stdio(0);
-  int table[9][9];
-  for (int i = 0; i < 9; i++)
-    for (int j = 0; j < 9; j++)
-      cin >> table[i][j];
+int main()
+{
+   string a;
+   char t[100];
+   int n;
+   while(cin>>a){
+		for(int i=0;a!=" ";i++)
+		    t[i]=a;
+		for(int i=0;i<strlen(t);i++)
+		    cout<<t[i]<<" ";    
+		 
+		 
+		 
+   }
+   
+   
+         
+         
+    
+	
+	
+	
+	
+	return 0;
 
-  return 0;
+
 }
+
