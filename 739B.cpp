@@ -44,6 +44,7 @@
 #pragma GCC optimize("-fdelete-null-pointer-checks")
 #include <bits/stdc++.h>
 using namespace std;
+#define int long long
 #define rep(i,a,n) for(int i=a;i<n;i++)
 #define per(i,a,n) for(int i=n-1;i>=a;i--)
 #define pb push_back
@@ -73,12 +74,30 @@ inline void dsunion(int s1, int s2) {if (rank[s1] < rank[s2])swap(s1, s2);parent
 #define y1 ojsapogjahg
 #define prev ojaposjdas
 //#define end aononcncnccc
-inline int pmod(int x, int divisor){int m = x % divisor;return m + ((m >> 31) & divisor);}
+inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
 const int _n=2e5+10,MAXB=19;
-
+int p,t,n,a[_n],fa[_n][MAXB],dep[_n],ans[_n];
+vector<PII> G[_n];
+void dfs(int v,int faa,int d){
+  dep[v]=d;fa[v][0]=faa;
+  rep(i,0,SZ(G[v]))if(faa!=G[v][i].fi)dfs(G[v][i].fi,v,d+G[v][i].se);
+}
+void bfa(){
+  rep(j,1,MAXB)rep(i,1,n+1)if(~fa[i][j-1])
+    fa[i][j]=fa[fa[i][j-1]][j-1];
+}
+void dfs2(int v,int faa){
+  rep(i,0,SZ(G[v]))if(faa!=G[v][i].fi)dfs2(G[v][i].fi,v),ans[v]+=ans[G[v][i].fi];
+}
 main(void) {cin.tie(0);ios_base::sync_with_stdio(0);
-  int a,b;cin>>a>>b;if(a<b)swap(a,b);int t=__gcd(a,b);
-  cout<<a/t<<':'<<b/t<<'\n';
+  cin>>n;rep(i,0,n)cin>>a[i];rep(i,0,n-1){cin>>p>>t;p--;G[i+1].pb({p,t}),G[p].pb({i+1,t});}
+  dfs(0,-1,0);rep(i,1,n+1)rep(j,1,MAXB)fa[i][j]=-1; bfa();
+  rep(i,1,n){
+    int tmp=i;
+    per(j,0,MAXB)if(~fa[tmp][j] and dep[i]-dep[fa[tmp][j]]<=a[i])tmp=fa[tmp][j];
+    ans[fa[tmp][0]]--,ans[fa[i][0]]++;
+  }dfs2(0,-1);
+  rep(i,0,n)cout<<ans[i]<<' '; cout<<'\n';
   return 0;
 }

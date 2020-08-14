@@ -90,6 +90,6 @@ int lca(int a,int b){
   return fa[a][0];
 }
 main(void) {cin.tie(0);ios_base::sync_with_stdio(0);
-
+  dfs(1,-1,0);rep(i,1,n+1)rep(j,1,MAXB)fa[i][j]=-1;
   return 0;
 }

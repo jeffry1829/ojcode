@@ -73,12 +73,22 @@ inline void dsunion(int s1, int s2) {if (rank[s1] < rank[s2])swap(s1, s2);parent
 #define y1 ojsapogjahg
 #define prev ojaposjdas
 //#define end aononcncnccc
-inline int pmod(int x, int divisor){int m = x % divisor;return m + ((m >> 31) & divisor);}
+inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-const int _n=2e5+10,MAXB=19;
-
+const int _n=2e5+10;
+int t,n,a[_n],id[_n],tim[_n],num;
+VI cycles;
+ll ans=1;
+void dfs(int v,int d){
+  id[v]=d;tim[v]=t;
+  if(id[a[v]] and tim[a[v]]==t)cycles.pb(id[v]-id[a[v]]+1);
+  else if(id[a[v]])return;
+  else dfs(a[v],d+1);
+}
 main(void) {cin.tie(0);ios_base::sync_with_stdio(0);
-  int a,b;cin>>a>>b;if(a<b)swap(a,b);int t=__gcd(a,b);
-  cout<<a/t<<':'<<b/t<<'\n';
+  cin>>n;rep(i,1,n+1)cin>>a[i];rep(i,1,n+1)if(!id[i])++t,dfs(i,1);
+  num=n;rep(i,0,SZ(cycles))num-=cycles[i]; ans=powmod(2,num);
+  rep(i,0,SZ(cycles))ans*=pmod(powmod(2,cycles[i])-2,mod),ans%=mod;
+  cout<<ans<<'\n';
   return 0;
 }

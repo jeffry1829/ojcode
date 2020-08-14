@@ -73,12 +73,19 @@ inline void dsunion(int s1, int s2) {if (rank[s1] < rank[s2])swap(s1, s2);parent
 #define y1 ojsapogjahg
 #define prev ojaposjdas
 //#define end aononcncnccc
-inline int pmod(int x, int divisor){int m = x % divisor;return m + ((m >> 31) & divisor);}
+inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-const int _n=2e5+10,MAXB=19;
-
+const int _n=1e5+10;
+string s;
+vector<char> ans;
+char mid;
 main(void) {cin.tie(0);ios_base::sync_with_stdio(0);
-  int a,b;cin>>a>>b;if(a<b)swap(a,b);int t=__gcd(a,b);
-  cout<<a/t<<':'<<b/t<<'\n';
+  cin>>s;int l=0,r=s.length()-1;
+  while(l<r){
+    if(s[l]==s[r])ans.pb(s[l]),l++,r--;
+    else if(s[l+1]==s[r] and l+1!=r)ans.pb(s[l+1]),l+=2,r--;
+    else if(s[l]==s[r-1] and l!=r-1)ans.pb(s[l]),r-=2,l++;
+    else l++,r--;
+  }rep(i,0,SZ(ans))cout<<ans[i]; cout<<s[l]; per(i,0,SZ(ans))cout<<ans[i]; cout<<'\n';
   return 0;
 }
