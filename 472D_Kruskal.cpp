@@ -64,27 +64,27 @@ const ll mod=1000000007;
 int rnd(int x){return mrand()%x;}
 ll powmod(ll a,ll b){ll res=1;a%=mod;assert(b>=0);for(;b;b>>=1){if(b&1)res=res*a%mod;a=a*a%mod;}return res;}
 ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
-#define rank oiajgpowsdjg
-const int N = 100;
-int parent[N], rank[N];
-inline void dsinit(int n) {for (int i = 0; i < n; i++)parent[i] = i;memset(rank, 0, sizeof rank);}
-inline int dsfind(int e) {return parent[e] == e ? e : parent[e] = dsfind(parent[e]);}
-inline void dsunion(int s1, int s2) {if (rank[s1] < rank[s2])swap(s1, s2);parent[s2] = s1;if (rank[s1] == rank[s2]) rank[s1]++;}
 #define y1 ojsapogjahg
 #define prev ojaposjdas
+#define rank oiajgpowsdjg
 //#define end aononcncnccc
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
 const int _n=2010,MAXB=12;
-int t,n,d[_n][_n],dep[_n],dis[_n],fa[_n][MAXB];
+int parent[_n], rank[_n];
+inline void dsinit(int n) {for (int i = 0; i < n; i++)parent[i] = i;memset(rank, 0, sizeof rank);}
+inline int dsfind(int e) {return parent[e] == e ? e : parent[e] = dsfind(parent[e]);}
+inline void dsunion(int s1, int s2) {if (rank[s1] < rank[s2])swap(s1, s2);parent[s2] = s1;if (rank[s1] == rank[s2]) rank[s1]++;}
+int t,n,dep[_n],fa[_n][MAXB],d[_n][_n];
+ll dis[_n];
 vector<PII> G[_n];
-bool vis[_n];
-class Cmp{
-  public:
-  bool operator()(const PII& a,const PII& b) const {return d[a.fi][a.se]>d[b.fi][b.se];}
+struct E{
+  int f,t,w;
+  bool operator<(const E& rhs) const {return w<rhs.w;}
 };
-bool operator<(const PII& a,const PII& b) {return d[a.fi][a.se]>d[b.fi][b.se];}
-void dfs(int v,int faa,int len){
+vector<E> e;
+bool vis[_n];
+void dfs(int v,int faa,ll len){
   dep[v]=dep[faa]+1;dis[v]=dis[faa]+len;fa[v][0]=faa;
   rep(i,0,SZ(G[v]))if(faa!=G[v][i].fi)dfs(G[v][i].fi,v,G[v][i].se);
 }
@@ -101,16 +101,14 @@ int lca(int a,int b){
 }
 main(void) {cin.tie(0);ios_base::sync_with_stdio(0);
   cin>>n;rep(i,1,n+1)rep(j,1,n+1)cin>>d[i][j];
-  rep(i,1,n+1)rep(j,i,n+1)if(d[i][j]!=d[j][i] or (i!=j and d[i][j]==0)){cout<<"NO\n";return 0;}
-  priority_queue<PII> pq;
-  pq.push({0,1});
-  while(!pq.empty()){
-    PII now;while(!pq.empty() and vis[(now=pq.top()).se])pq.pop();
-    if(pq.empty())break;
-    vis[now.se]=1;
-    G[now.fi].pb({now.se,d[now.fi][now.se]});
-    //if(now.fi!=0)G[now.se].pb({now.fi,d[now.se][now.fi]});
-    rep(i,1,n+1)if(!vis[i])pq.push({now.se,i});
+  rep(i,1,n+1)rep(j,i,n+1)if((i==j and d[i][i]) or d[i][j]!=d[j][i] or (i!=j and d[i][j]==0)){cout<<"NO\n";return 0;}
+  rep(i,1,n+1)rep(j,i+1,n+1)e.pb({i,j,d[i][j]}); sort(all(e)); dsinit(n);
+  rep(i,0,SZ(e)){
+    int s1=dsfind(e[i].f),s2=dsfind(e[i].t);
+    if(s1==s2) continue;
+    dsunion(s1,s2);
+    G[e[i].f].pb({e[i].t,e[i].w});
+    G[e[i].t].pb({e[i].f,e[i].w});
   }
   dep[0]=-1;dfs(1,0,0);rep(i,1,n+1)rep(j,1,MAXB)fa[i][j]=-1; bfa();
   rep(i,1,n+1)rep(j,i,n+1){
