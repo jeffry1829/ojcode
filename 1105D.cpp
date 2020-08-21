@@ -64,53 +64,48 @@ const ll mod=1000000007;
 int rnd(int x){return mrand()%x;}
 ll powmod(ll a,ll b){ll res=1;a%=mod;assert(b>=0);for(;b;b>>=1){if(b&1)res=res*a%mod;a=a*a%mod;}return res;}
 ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
-#define rank oiajgpowsdjg
-const int N = 100;
-int parent[N], rank[N];
-inline void dsinit(int n) {for (int i = 0; i < n; i++)parent[i] = i;memset(rank, 0, sizeof rank);}
-inline int dsfind(int e) {return parent[e] == e ? e : parent[e] = dsfind(parent[e]);}
-inline void dsunion(int s1, int s2) {if (rank[s1] < rank[s2])swap(s1, s2);parent[s2] = s1;if (rank[s1] == rank[s2]) rank[s1]++;}
 #define y1 ojsapogjahg
 #define prev ojaposjdas
+#define rank oiajgpowsdjg
 //#define end aononcncnccc
-inline int pmod(int x, int divisor){int m = x % divisor;return m + ((m >> 31) & divisor);}
+inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-const int _n=2e5+10;
-int n;
-ll s[_n];
-namespace Seg{
-  int nn;
-  ll t[_n<<2],laz[_n<<2];
-  void pull(int v){t[v]=min(t[2*v+1],t[2*v+2]);}
-  void apply(int v, ll val){t[v]+=val,laz[v]+=val;}
-  void push(int v){
-    if(laz[v]!=0)apply(2*v+1,laz[v]),apply(2*v+2,laz[v]),laz[v]=0;
-  }
-  void build(int v, int l, int r){
-    if(l+1==r)t[v]=s[l];
-    else{int m=(l+r)>>1;build(2*v+1,l,m),build(2*v+2,m,r);pull(v);}
-  }
-  void add(int v,int l,int r,int ql,int qr,ll val){
-    if(r<=ql or qr<=l)return;
-    else if(ql<=l and r<=qr)apply(v,val);
-    else{
-      push(v);int m=(l+r)>>1;
-      add(2*v+1,l,m,ql,qr,val),add(2*v+2,m,r,ql,qr,val);
-      pull(v);
+const int _n=1010;
+struct ele{int x,y,move;};
+int t,n,m,s[11],p,mp[_n][_n],ans[11];
+queue<ele> st[11],q; // queue必須宣告在外面
+bool vis[_n][_n];
+char c;
+main(void) {cin.tie(0);ios_base::sync_with_stdio(0);
+  cin>>n>>m>>p;rep(i,1,p+1)cin>>s[i];
+  cin.get();rep(i,1,n+1){rep(j,1,m+1){
+    c=cin.get();int res=c;if(c=='.')res='0'+0;if(c=='#')res='0'+10;
+    mp[i][j]=res-'0';
+    if(mp[i][j]!=0 and mp[i][j]!=10)st[mp[i][j]].push({i,j,s[mp[i][j]]});
+    if(mp[i][j]==10)vis[i][j]=1;
+  }cin.get();}
+  rep(i,0,n+1)mp[i][0]=10; rep(i,0,m+1)mp[0][i]=10;
+  rep(i,0,n+1)mp[i][m+1]=10; rep(i,0,m+1)mp[n+1][i]=10;
+
+  while(1){
+    bool OUT=1;rep(i,1,p+1)if(!st[i].empty())OUT=0;
+    if(OUT)break;
+    rep(id,1,p+1){
+      while(!st[id].empty())q.push(st[id].front()),st[id].pop();
+      while(!q.empty()){
+        ele now=q.front(); q.pop();
+        if(vis[now.x][now.y])continue;
+        int x=now.x,y=now.y,mv=now.move;
+        mp[x][y]=id; if(mv>0)vis[x][y]=1;
+        if(mv==0)st[id].push({x,y,s[id]});
+        if(mv>0 and !mp[x-1][y] and !vis[x-1][y])q.push({x-1,y,mv-1});
+        if(mv>0 and !mp[x+1][y] and !vis[x+1][y])q.push({x+1,y,mv-1});
+        if(mv>0 and !mp[x][y-1] and !vis[x][y-1])q.push({x,y-1,mv-1});
+        if(mv>0 and !mp[x][y+1] and !vis[x][y+1])q.push({x,y+1,mv-1});
+      }
     }
   }
-  void add(int l,int r,ll val){add(0,0,nn,l,r,val);}
-  void add(int pos,ll val){add(0,0,nn,pos,pos+1,val);}
-  void init(int n_){nn=n_;build(0,0,nn);}
-  int lz(int v,int l,int r){
-    int m=(l+r)>>1;if(l+1==r)return l;
-    int res;push(v);
-    if(t[2*v+2]==0)res=lz(2*v+2,m,r);
-    else res=lz(2*v+1,l,m);
-    pull(v);return res;
-  }
-}
-main(void) {cin.tie(0);ios_base::sync_with_stdio(0);
-
+  rep(i,1,n+1)rep(j,1,m+1)ans[mp[i][j]]++;
+  rep(i,1,p+1)cout<<ans[i]<<' '; cout<<'\n';
   return 0;
 }

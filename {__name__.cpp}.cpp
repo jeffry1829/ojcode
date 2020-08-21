@@ -44,6 +44,7 @@
 #pragma GCC optimize("-fdelete-null-pointer-checks")
 #include <bits/stdc++.h>
 using namespace std;
+//#define int long long
 #define rep(i,a,n) for(int i=a;i<n;i++)
 #define per(i,a,n) for(int i=n-1;i>=a;i--)
 #define pb push_back
@@ -72,7 +73,7 @@ inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
 const int _n=1e5+10;
 int t,n,m;
-main(void) {cin.tie(0);ios_base::sync_with_stdio(0);
+main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
 
   return 0;
 }

@@ -88,6 +88,7 @@ class Cmp{
   public:
   bool operator()(const PII& a,const PII& b) const {return d[a.fi][a.se]>d[b.fi][b.se];}
 };
+priority_queue<node> pq;
 void dfs(int v,int faa,ll len){
   dep[v]=dep[faa]+1;dis[v]=dis[faa]+len;fa[v][0]=faa;
   rep(i,0,SZ(G[v]))if(faa!=G[v][i].fi)dfs(G[v][i].fi,v,G[v][i].se);
@@ -105,9 +106,7 @@ int lca(int a,int b){
 }
 main(void) {cin.tie(0);ios_base::sync_with_stdio(0);
   cin>>n;rep(i,1,n+1)rep(j,1,n+1)cin>>d[i][j];
-  if(n==1859){cout<<"NO\n";return 0;}
   rep(i,1,n+1)rep(j,i,n+1)if((i==j and d[i][i]) or d[i][j]!=d[j][i] or (i!=j and d[i][j]==0)){cout<<"NO\n";return 0;}
-  priority_queue<node> pq;
   pq.push({0,1});
   while(!pq.empty()){
     /*PII now;while(!pq.empty() and vis[(now=pq.top()).se])pq.pop();

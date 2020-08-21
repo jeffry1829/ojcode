@@ -75,47 +75,7 @@ inline void dsunion(int s1, int s2) {if (rank[s1] < rank[s2])swap(s1, s2);parent
 //#define end aononcncnccc
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-const int _n=2010,MAXB=12;
-int t,n,d[_n][_n],dep[_n],dis[_n],fa[_n][MAXB];
-vector<PII> G[_n];
-bool vis[_n];
-class Cmp{
-  public:
-  bool operator()(const PII& a,const PII& b) const {return d[a.fi][a.se]>d[b.fi][b.se];}
-};
-bool operator<(const PII& a,const PII& b) {return d[a.fi][a.se]>d[b.fi][b.se];}
-void dfs(int v,int faa,int len){
-  dep[v]=dep[faa]+1;dis[v]=dis[faa]+len;fa[v][0]=faa;
-  rep(i,0,SZ(G[v]))if(faa!=G[v][i].fi)dfs(G[v][i].fi,v,G[v][i].se);
-}
-void bfa(){
-  rep(j,1,MAXB)rep(i,1,n+1)if(~fa[i][j-1])
-    fa[i][j]=fa[fa[i][j-1]][j-1];
-}
-int lca(int a,int b){
-  if(dep[a]<dep[b])swap(a,b);
-  per(j,0,MAXB)if(~fa[a][j] and dep[fa[a][j]]>=dep[b])a=fa[a][j];
-  if(a==b)return a;
-  per(j,0,MAXB)if(~fa[a][j] and fa[a][j]!=fa[b][j])a=fa[a][j],b=fa[b][j];
-  return fa[a][0];
-}
 main(void) {cin.tie(0);ios_base::sync_with_stdio(0);
-  cin>>n;rep(i,1,n+1)rep(j,1,n+1)cin>>d[i][j];
-  rep(i,1,n+1)rep(j,i,n+1)if(d[i][j]!=d[j][i] or (i!=j and d[i][j]==0)){cout<<"NO\n";return 0;}
-  priority_queue<PII> pq;
-  pq.push({0,1});
-  while(!pq.empty()){
-    PII now;while(!pq.empty() and vis[(now=pq.top()).se])pq.pop();
-    if(pq.empty())break;
-    vis[now.se]=1;
-    G[now.fi].pb({now.se,d[now.fi][now.se]});
-    //if(now.fi!=0)G[now.se].pb({now.fi,d[now.se][now.fi]});
-    rep(i,1,n+1)if(!vis[i])pq.push({now.se,i});
-  }
-  dep[0]=-1;dfs(1,0,0);rep(i,1,n+1)rep(j,1,MAXB)fa[i][j]=-1; bfa();
-  rep(i,1,n+1)rep(j,i,n+1){
-    int l=lca(i,j);
-    if(d[i][j]!=dis[i]+dis[j]-dis[l]*2){cout<<"NO\n";return 0;}
-  }cout<<"YES\n";
+  cout<<__gcd(1,__gcd(2,__gcd(6,4)));
   return 0;
 }
