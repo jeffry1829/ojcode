@@ -72,34 +72,26 @@ ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
 const int _n=2e5+10;
+int parent[_n], rank[_n];
+inline void dsinit(int n) {for (int i = 0; i < n; i++)parent[i] = i;memset(rank, 0, sizeof rank);}
+inline int dsfind(int e) {return parent[e] == e ? e : parent[e] = dsfind(parent[e]);}
+inline void dsunion(int s1, int s2) {if (rank[s1] < rank[s2])swap(s1, s2);parent[s2] = s1;if (rank[s1] == rank[s2]) rank[s1]++;}
 struct E{
   int f,t;ll w;
   bool operator<(const E& rhs)const{return w<rhs.w;}
 };
-int t,n,m;
-ll a[_n];
-E e[_n];
-bool conn[_n];
+int t,n,m,s1,s2,id=0,x,y;
+ll a[_n],sum=0,w;
+vector<E> e;
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
   cin>>n>>m;rep(i,0,n)cin>>a[i]; rep(i,0,m){
-    int x,y;ll w;cin>>x>>y>>w;x--,y--;e[i]={x,y,w};
-  }sort(a,a+n),sort(e,e+m);
-  ll sum=0;rep(i,1,n)conn[i]=1,sum+=a[0]+a[i]; conn[0]=1;
-  rep(i,0,m){
-    int u=e[i].f,v=e[i].t,w=e[i].w;
-    if(!conn[u] and !conn[v])continue;
-    if(u!=0 and v!=0){
-      if(a[u]>a[v])swap(u,v);
-      if(conn[u] and conn[v]){
-        if(a[0]+a[v]>w)conn[v]=0,sum-=a[0]+a[v],sum+=w;
-      }else{
-        if(conn[u])swap(u,v);
-        if(a[0]+a[v]>w)conn[v]=0,sum-=a[0]+a[v],sum+=w;
-      }
-    }else{
-      if(v==0)swap(u,v);
-      if(a[0]+a[v]>w)sum-=a[0]+a[v],sum+=w;
-    }
+    cin>>x>>y>>w;x--,y--;e.pb({x,y,w});
+  }id=0;rep(i,1,n)if(a[i]<a[id])id=i;
+  rep(i,m,m+n)if(i-m!=id)e.pb({id,i-m,a[id]+a[i-m]});
+  sort(all(e)); dsinit(n);
+  sum=0;rep(i,0,m+n-1){
+    s1=dsfind(e[i].f),s2=dsfind(e[i].t);
+    if(s1!=s2)dsunion(s1,s2),sum+=e[i].w;
   }cout<<sum<<'\n';
   return 0;
 }
