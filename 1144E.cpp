@@ -68,13 +68,19 @@ ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
 #define y1 ojsapogjahg
 #define prev ojaposjdas
 #define rank oiajgpowsdjg
-#define left aijhgpiaejhgp
+#define left oajgpoisfjgisf
 //#define end aononcncnccc
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-const int _n=1e5+10;
-int t,n,m;
+const int _n=2e5+10;
+int tt,k,inc,z,left;
+char s[_n],t[_n],res[_n];
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-
+  cin>>k>>(s+1)>>(t+1); rep(i,1,k+1)s[i]-='a',t[i]-='a';
+  per(i,1,k+1)res[i]=(s[i]+t[i]+inc)%26,inc=((s[i]+t[i]+inc)/26)?1:0;
+  z=inc; res[0]=inc;
+  rep(i,0,k+1){
+    tt=res[i],res[i]=(left*26+res[i])/2,left=(left*26+tt)%2;
+  }rep(i,1,k+1)cout<<(char)('a'+res[i]); cout<<'\n';
   return 0;
 }
