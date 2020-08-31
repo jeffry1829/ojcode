@@ -73,9 +73,36 @@ ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
 //#define end aononcncnccc
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-const int _n=1e5+10;
-int t,n,m;
+const int _n=110;
+int t,n,a[_n];
+struct mat{
+  int a[_n][_n];
+  mat(){memset(a,0,sizeof a);}
+  mat operator*(const mat& rhs)const{
+    mat res;
+    rep(i,0,n)rep(j,0,n){
+      res.a[i][j]=-1e5;
+      rep(k,0,n)res.a[i][j]=max(res.a[i][j],a[i][k]+rhs.a[k][j]);
+    }
+    return res;
+  }
+  mat operator^(int b){
+    mat res,tmp=*this;
+    while(b){
+      if(b&1)res=res*tmp;
+      b>>=1;tmp=tmp*tmp;
+    }
+    return res;
+  }
+};
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-
+  cin>>n>>t;rep(i,0,n)cin>>a[i]; mat ans;
+  rep(i,0,n)rep(j,0,n){
+    if(a[i]>a[j]){ans.a[i][j]=-1e5;continue;}
+    ans.a[i][j]=1;
+    rep(k,0,j)if(a[k]<=a[j])ans.a[i][j]=max(ans.a[i][j],ans.a[i][k]+1);
+  }ans=ans^t;
+  int maxx=0;rep(i,0,n)rep(j,0,n)maxx=max(maxx,ans.a[i][j]);
+  cout<<maxx<<'\n';
   return 0;
 }

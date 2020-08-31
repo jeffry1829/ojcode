@@ -73,9 +73,17 @@ ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
 //#define end aononcncnccc
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-const int _n=1e5+10;
-int t,n,m;
+const int _n=110;
+int tt,a[_n*_n],st[_n*_n],ed[_n*_n],num[310];
+ll n,nn,t;
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-
+  cin>>n>>t;rep(i,0,n){cin>>a[i];num[a[i]]++;} nn=min(n*n,n*t);
+  rep(i,n,nn)a[i]=a[i%n];
+  rep(i,0,nn){ed[i]=1;{rep(j,0,i)if(a[j]<=a[i])ed[i]=max(ed[i],ed[j]+1);}}
+  per(i,0,nn){st[i]=1;{per(j,i+1,nn)if(a[j]>=a[i])st[i]=max(st[i],st[j]+1);}}
+  int maxx=-1;
+  if(t<n)rep(i,0,nn)maxx=max(maxx,ed[i]);
+  else rep(i,0,nn)maxx=max(maxx,ed[i]+st[i]-1+num[a[i]]*(t-n));
+  cout<<maxx<<'\n';
   return 0;
 }

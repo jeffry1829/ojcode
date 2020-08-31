@@ -73,9 +73,36 @@ ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
 //#define end aononcncnccc
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-const int _n=1e5+10;
+const int _n=1e6+10;
 int t,n,m;
+char p[_n];
+int lenp,y[_n],jj,F[_n];
+bool vis[_n];
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-
+  cin>>n>>m>>p;lenp=strlen(p);rep(i,0,m){cin>>y[i];y[i]--;}
+  /*F[0]=-1,jj=-1;rep(i,0,lenp){
+    jj=F[i];
+    while(jj!=-1 and p[i]!=p[jj])jj=F[jj];
+    F[i+1]=jj+1; //if jj==-1, F[i]=0
+  }*/ //也行
+  F[0]=-1;
+  for(int i = 0, j = -1; i < lenp; F[++i] = ++j) { //計算失敗函數，一般來說i<lenp-1，但是這題我們需要i<lenp
+    while (j != -1 && p[i] != p[j]) j = F[j];
+  }
+  jj=F[lenp];
+  while(jj!=-1){ //看看哪些前綴可以和整條字串p的後綴匹配
+    vis[jj]=1;
+    jj=F[jj];
+  }
+  int cnt=y[0];rep(i,1,m){
+    if(y[i-1]+lenp-1>=y[i]){
+      if(!vis[lenp-(y[i]-y[i-1])]){
+        cout<<0<<'\n';return 0;
+      }
+    }
+    else cnt+=y[i]-(y[i-1]+lenp-1)-1;
+  }cnt+=n-(y[m-1]+lenp);
+  if(m==0)cnt=n;
+  cout<<powmod(26,cnt)<<'\n';
   return 0;
 }

@@ -73,9 +73,49 @@ ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
 //#define end aononcncnccc
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-const int _n=1e5+10;
+const int _n=1e6+10;
 int t,n,m;
-main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+const int _N = _n;  // str len
+const int _p1 = 31, _M = 1000000009;
+int pnM[_N] = {0};  // p^n mod M
+int hp[_N] = {0};   // hash prefix
+char p[_N];
+int lenp,y[_n];
 
+inline void genpnM() {
+  int res = 1;  //p^0%M
+  pnM[0] = 1;
+  for (int i = 1; i < _N; i++) pnM[i] = res = (res * 1ll * _p1) % _M;
+}
+inline void genhp() {  //hp[n]=hash prefix[0,n)
+  int res = 0;
+  hp[0] = 0;  //[0,0) is empty string
+  for (int i = 1; i <= lenp; i++) hp[i] = res = (res * 1ll * _p1 + p[i - 1] * 1ll) % _M;
+}
+inline int dhash(char s[]) {  //direct hash
+  int len = strlen(s);
+  int res = 0;
+  for (int i = 1; i <= len; i++) res = (res * 1ll * _p1 + s[i - 1] * 1ll) % _M;
+  return res;
+}
+inline int hashlr(int l, int r) {  //[l,r)
+  int tmp = hp[r] * 1ll - pnM[r - l] * 1ll * hp[l] % _M;
+  if (tmp < 0) tmp += _M;
+  return tmp;
+}
+//以上是rolling hash模板
+main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+  cin>>n>>m>>p;lenp=strlen(p);rep(i,0,m){cin>>y[i];y[i]--;}
+  genpnM();genhp();
+  int cnt=y[0];rep(i,1,m){
+    if(y[i-1]+lenp-1>=y[i]){
+      if(hashlr(y[i]-y[i-1],lenp)!=hashlr(0,lenp-(y[i]-y[i-1]))){
+        cout<<0<<'\n';return 0;
+      }
+    }
+    else cnt+=y[i]-(y[i-1]+lenp-1)-1;
+  }cnt+=n-(y[m-1]+lenp);
+  if(m==0)cnt=n;
+  cout<<powmod(26,cnt)<<'\n';
   return 0;
 }

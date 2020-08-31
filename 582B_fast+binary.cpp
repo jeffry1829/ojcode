@@ -73,9 +73,26 @@ ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
 //#define end aononcncnccc
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-const int _n=1e5+10;
-int t,n,m;
+const int _n=110;
+int tt,a[_n*_n],num[310];
+ll n,nn,t,k;
+int LIS(){
+  int sta[_n*_n],top=0;
+  sta[top++]=a[0];
+  rep(i,1,nn){
+    if(a[i]>=sta[top-1])sta[top++]=a[i];
+    else *upper_bound(sta,sta+top,a[i])=a[i];
+  }
+  return top;
+}
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-
+  cin>>n>>t;rep(i,0,n){cin>>a[i];num[a[i]]++;k=max(k,num[a[i]]);}
+  nn=min(n*n,n*t);
+  rep(i,n,nn)a[i]=a[i%n];
+  if(t>n){
+    int ans=k*(t-n);
+    ans+=LIS();
+    cout<<ans<<'\n';
+  }else cout<<LIS()<<'\n';
   return 0;
 }

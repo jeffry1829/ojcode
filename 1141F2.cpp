@@ -42,7 +42,6 @@
 #pragma GCC optimize("-fexpensive-optimizations")
 #pragma GCC optimize("inline-functions-called-once")
 #pragma GCC optimize("-fdelete-null-pointer-checks")
-#pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
 using namespace std;
 //#define int long long
@@ -73,9 +72,25 @@ ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
 //#define end aononcncnccc
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-const int _n=1e5+10;
-int t,n,m;
+const int _n=1510;
+int t,n,a[_n],pre[_n];
+struct B{int st,ed;};
+map<int,vector<B>> mp;
+vector<B> tmp;
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-
+  cin>>n;rep(i,1,n+1)cin>>a[i];rep(i,1,n+1)pre[i]=pre[i-1]+a[i];
+  rep(i,1,n+1)per(j,0,i){
+    int sum=pre[i]-pre[j];
+    if(!mp.count(sum)){
+      tmp.clear();tmp.pb({j+1,i});
+      mp[sum]=tmp;
+      continue;
+    }
+    if(mp[sum].back().ed<=j)mp[sum].pb({j+1,i});
+  }
+  PII maxx={0,0};for(auto it=mp.begin();it!=mp.end();it++){
+    if(SZ(it->se)>maxx.fi)maxx.fi=SZ(it->se),maxx.se=it->fi;
+  }cout<<maxx.fi<<'\n';
+  rep(i,0,maxx.fi)cout<<mp[maxx.se][i].st<<' '<<mp[maxx.se][i].ed<<'\n';
   return 0;
 }

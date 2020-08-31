@@ -42,7 +42,6 @@
 #pragma GCC optimize("-fexpensive-optimizations")
 #pragma GCC optimize("inline-functions-called-once")
 #pragma GCC optimize("-fdelete-null-pointer-checks")
-#pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
 using namespace std;
 //#define int long long
@@ -73,9 +72,23 @@ ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
 //#define end aononcncnccc
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-const int _n=1e5+10;
-int t,n,m;
+const int _n=2e5+10;
+int t,n,a[_n],u,v;
+ll ans,tot,dp[_n],sum[_n],tmp;
+VI G[_n];
+void dfs(int v,int fa){
+  sum[v]=a[v];
+  rep(i,0,SZ(G[v]))if(G[v][i]!=fa)
+    dfs(G[v][i],v),sum[v]+=sum[G[v][i]],dp[v]+=dp[G[v][i]]+sum[G[v][i]];
+}
+void dfs2(int v,int fa){
+  if(fa>=0)ans=max(ans,dp[v]=(dp[fa]-sum[v]+(tot-sum[v])));
+  rep(i,0,SZ(G[v]))if(G[v][i]!=fa)dfs2(G[v][i],v);
+}
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-
+  cin>>n;rep(i,0,n){cin>>a[i];tot+=a[i];}
+  rep(i,0,n-1){cin>>u>>v;u--,v--;G[u].pb(v),G[v].pb(u);}
+  dfs(0,-1);ans=dp[0];dfs2(0,-1);
+  cout<<ans<<'\n';
   return 0;
 }

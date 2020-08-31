@@ -73,9 +73,36 @@ ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
 //#define end aononcncnccc
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-const int _n=1e5+10;
-int t,n,m;
+const int _n=1e6+10;
+int t,n,m,lenp,Z[_n],y[_n];
+char p[_n];
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-
+  cin>>n>>m>>p;lenp=strlen(p);rep(i,0,m){cin>>y[i];y[i]--;}
+  int L = 0, R = 0;
+  for (int i = 1; i < lenp; i++) {
+    if (i > R) {
+      L = R = i;
+      while (R < n && p[R-L] == p[R]) R++;
+      Z[i] = R-L; R--;
+    } else {
+      int k = i-L;
+      if (Z[k] < R-i+1) Z[i] = Z[k];
+      else {
+        L = i;
+        while (R < n && p[R-L] == p[R]) R++;
+        Z[i] = R-L; R--;
+      }
+    }
+  }
+  int cnt=y[0];rep(i,1,m){
+    if(y[i-1]+lenp-1>=y[i]){
+      if(Z[y[i]-y[i-1]]!=lenp-(y[i]-y[i-1])){
+        cout<<0<<'\n';return 0;
+      }
+    }
+    else cnt+=y[i]-(y[i-1]+lenp-1)-1;
+  }cnt+=n-(y[m-1]+lenp);
+  if(m==0)cnt=n;
+  cout<<powmod(26,cnt)<<'\n';
   return 0;
 }
