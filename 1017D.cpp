@@ -1,5 +1,5 @@
-#pragma GCC optimize(1)
-#pragma GCC optimize(2)
+//#pragma GCC optimize(1)
+//#pragma GCC optimize(2)
 #pragma GCC optimize(3)
 #pragma GCC optimize("Ofast")
 #pragma GCC optimize("inline")
@@ -42,8 +42,10 @@
 #pragma GCC optimize("-fexpensive-optimizations")
 #pragma GCC optimize("inline-functions-called-once")
 #pragma GCC optimize("-fdelete-null-pointer-checks")
+#pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
 using namespace std;
+//#define int long long
 #define rep(i,a,n) for(int i=a;i<n;i++)
 #define per(i,a,n) for(int i=n-1;i>=a;i--)
 #define pb push_back
@@ -54,7 +56,7 @@ using namespace std;
 #define SZ(x) ((int)(x).size())
 #define min(a,b) (((a)<(b))?(a):(b))
 #define max(a,b) (((a)>(b))?(a):(b))
-#define abs(x) ((x<0)?(-x):(x))
+#define abs(x) (((x)<0)?(-(x)):(x))
 typedef vector<int> VI;
 typedef long long ll;
 typedef pair<int,int> PII;
@@ -64,33 +66,30 @@ const ll mod=1000000007;
 int rnd(int x){return mrand()%x;}
 ll powmod(ll a,ll b){ll res=1;a%=mod;assert(b>=0);for(;b;b>>=1){if(b&1)res=res*a%mod;a=a*a%mod;}return res;}
 ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
+#define y1 ojsapogjahg
+#define prev ojaposjdas
 #define rank oiajgpowsdjg
-const int N = 100;
-int parent[N], rank[N];
-inline void dsinit(int n) {for (int i = 0; i < n; i++)parent[i] = i;memset(rank, 0, sizeof rank);}
-inline int dsfind(int e) {return parent[e] == e ? e : parent[e] = dsfind(parent[e]);}
-inline void dsunion(int s1, int s2) {if (rank[s1] < rank[s2])swap(s1, s2);parent[s2] = s1;if (rank[s1] == rank[s2]) rank[s1]++;}
+#define left aijhgpiaejhgp
+//#define end aononcncnccc
+inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-const int _n=1e5+10,MAXB=18;
-int n,k,a,b,dep[_n],fa[_n][MAXB];
-vector<PII> G[_n];
-void dfs(int v,int faa,int d){
-  dep[v]=d;fa[v][0]=faa;
-  rep(i,0,SZ(G[v]))if(faa!=G[v][i].fi)dfs(G[v][i].fi,v,d+1);
-}
-void bfa(){
-  rep(j,1,MAXB)rep(i,1,n+1)if(~fa[i][j-1])
-    fa[i][j]=fa[fa[i][j-1]][j-1];
-}
-int lca(int a,int b){
-  if(dep[a]<dep[b])swap(a,b);
-  per(j,0,MAXB)if(~fa[a][j] and dep[fa[a][j]]>=dep[b])a=fa[a][j];
-  if(a==b)return a;
-  per(j,0,MAXB)if(~fa[a][j] and fa[a][j]!=fa[b][j])a=fa[a][j],b=fa[b][j];
-  return fa[a][0];
-}
-main(void) {cin.tie(0);ios_base::sync_with_stdio(0);
-  dfs(1,-1,0);rep(i,1,n+1)rep(j,1,MAXB)fa[i][j]=-1; bfa();
-  //節點從1開始
+const int _n=15;
+int t,n,m,q,w[_n],k,cnt[4096],ans[4096][110],wu[4096];
+char s[_n];
+main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+  cin>>n>>m>>q;rep(i,1,n+1)cin>>w[i];
+  rep(i,0,1<<n)rep(j,0,n)wu[i]+=w[n-j]*((i&(1<<j))>0);
+  rep(i,0,m){
+    int num=0;cin>>(s+1);
+    rep(j,0,n)num+=(s[n-j]-'0')*(1<<j);
+    cnt[num]++;
+  }rep(qu,0,1<<n)rep(ts,0,1<<n){
+    ans[qu][wu[(qu^~ts)&~-(1<<n)]>100?101:wu[(qu^~ts)&~-(1<<n)]]+=cnt[ts];
+  }while(q--){
+    cin>>(s+1)>>k;
+    t=0;rep(j,0,n)t+=(s[n-j]-'0')*(1<<j);
+    int res=0;rep(i,0,k+1)res+=ans[t][i];
+    cout<<res<<'\n';
+  }
   return 0;
 }
