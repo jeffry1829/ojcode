@@ -73,12 +73,21 @@ ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
 //#define end aononcncnccc
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-const int _n=2e5+10;
-int t,n,k,a[_n];
-ll ans;
-ll ten[11]={1,10,100,1000,10000,100000,1000000,10000000,100000000,1000000000,10000000000ll};
-map<PII,int> mp;
+const int _n=1e4+10;
+int t,n,k,ans[_n];
+bool vis[_n];
+VI lst;
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  cout<<(!0)<<'\n';
+  cin>>n;rep(i,1,n+1)lst.pb(i);
+  while(SZ(lst)>1){
+    int res1,res2,sz=SZ(lst);
+    cout<<"? "<<lst[sz-2]<<" "<<lst.back()<<endl; cin>>res1;
+    cout<<"? "<<lst.back()<<" "<<lst[sz-2]<<endl; cin>>res2;
+    if(res1>res2)ans[lst[sz-2]]=res1,vis[res1]=1,lst.erase(lst.begin()+sz-2,lst.begin()+sz-1);
+    if(res1<res2)ans[lst.back()]=res2,vis[res2]=1,lst.pop_back();
+  }int id;rep(i,1,n+1)if(!ans[i])id=i;
+  rep(i,1,n+1)if(!vis[i])ans[id]=i;
+  cout<<"! ";
+  rep(i,1,n+1)cout<<ans[i]<<' '; cout<<endl;
   return 0;
 }

@@ -42,10 +42,8 @@
 #pragma GCC optimize("-fexpensive-optimizations")
 #pragma GCC optimize("inline-functions-called-once")
 #pragma GCC optimize("-fdelete-null-pointer-checks")
-#pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
 using namespace std;
-//#define int long long
 #define rep(i,a,n) for(int i=a;i<n;i++)
 #define per(i,a,n) for(int i=n-1;i>=a;i--)
 #define pb push_back
@@ -66,19 +64,37 @@ const ll mod=1000000007;
 int rnd(int x){return mrand()%x;}
 ll powmod(ll a,ll b){ll res=1;a%=mod;assert(b>=0);for(;b;b>>=1){if(b&1)res=res*a%mod;a=a*a%mod;}return res;}
 ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
+#define rank oiajgpowsdjg
+const int N = 100;
+int parent[N], rank[N];
+inline void dsinit(int n) {for (int i = 0; i < n; i++)parent[i] = i;memset(rank, 0, sizeof rank);}
+inline int dsfind(int e) {return parent[e] == e ? e : parent[e] = dsfind(parent[e]);}
+inline void dsunion(int s1, int s2) {if (rank[s1] < rank[s2])swap(s1, s2);parent[s2] = s1;if (rank[s1] == rank[s2]) rank[s1]++;}
 #define y1 ojsapogjahg
 #define prev ojaposjdas
-#define rank oiajgpowsdjg
-#define left aijhgpiaejhgp
 //#define end aononcncnccc
-inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
+inline int pmod(int x, int divisor){int m = x % divisor;return m + ((m >> 31) & divisor);}
 //head
-const int _n=2e5+10;
-int t,n,k,a[_n];
-ll ans;
-ll ten[11]={1,10,100,1000,10000,100000,1000000,10000000,100000000,1000000000,10000000000ll};
-map<PII,int> mp;
-main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  cout<<(!0)<<'\n';
+const int _n=1e6+10,MAXB=21;
+int n,q,cnt[_n],a,k;
+namespace BIT{
+  int nn;ll t[_n];
+  void update(int x,int val){while(x<=nn)t[x]+=val,x+=(x&-x);}
+  ll query(int x){ll res=0;while(x>0){res+=t[x],x-=(x&-x);}return res;}
+  void init(int n_){nn=n_;}
+}
+main(void) {cin.tie(0);ios_base::sync_with_stdio(0);
+  cin>>n>>q;BIT::init(n);rep(i,1,n+1){cin>>a;cnt[a]++;}
+  rep(i,1,n+1)BIT::update(i,cnt[i]);
+  while(q--){
+    cin>>k;if(k>0)cnt[k]++,BIT::update(k,1);
+    else{
+      int res=0;per(j,0,MAXB)if(res+(1<<j)<=n and BIT::query(res+(1<<j))<-k)res+=(1<<j);
+      res++,cnt[res]--,BIT::update(res,-1);
+    }
+  }if(BIT::query(n)==0)cout<<0<<'\n';
+  else{
+    rep(i,1,n+1)if(BIT::query(i)>0){cout<<i<<'\n';return 0;}
+  }
   return 0;
 }

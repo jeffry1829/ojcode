@@ -73,12 +73,14 @@ ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
 //#define end aononcncnccc
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-const int _n=2e5+10;
-int t,n,k,a[_n];
-ll ans;
-ll ten[11]={1,10,100,1000,10000,100000,1000000,10000000,100000000,1000000000,10000000000ll};
-map<PII,int> mp;
+const int _n=1e6+10;
+int t,n,m,a[_n];
+bool can[1010][1010];
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  cout<<(!0)<<'\n';
+  cin>>n>>m;if(n>m){cout<<"YES\n";return 0;}
+  rep(i,0,n){cin>>a[i];a[i]%=m;}
+  can[0][a[0]]=1;rep(i,1,n){can[i][a[i]]=1;rep(j,0,m)if(can[i-1][j])can[i][j]=1,can[i][(a[i]+j)%m]=1;}
+  if(can[n-1][0])cout<<"YES\n";
+  else cout<<"NO\n";
   return 0;
 }

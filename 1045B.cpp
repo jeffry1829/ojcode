@@ -71,14 +71,25 @@ ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
 #define rank oiajgpowsdjg
 #define left aijhgpiaejhgp
 //#define end aononcncnccc
+#define free ikjapsdjop
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-const int _n=2e5+10;
-int t,n,k,a[_n];
-ll ans;
-ll ten[11]={1,10,100,1000,10000,100000,1000000,10000000,100000000,1000000000,10000000000ll};
-map<PII,int> mp;
+const int _n=1e5+10;
+ll t,tt,n,a[_n];
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  cout<<(!0)<<'\n';
+  cin>>t;while(t--){
+    cin>>n;rep(i,0,n)cin>>a[i];
+    ll free=0;
+    rep(i,0,n-1){
+      if(a[i]>0)free+=a[i],a[i]=0;
+      else if(a[i]<0){
+        tt=min(-a[i],free);
+        free-=tt,a[i]+=tt;
+      }
+    }
+    a[n-1]+=free;
+    ll ans=0;rep(i,0,n)if(a[i]>0)ans+=a[i];
+    cout<<ans<<'\n';
+  }
   return 0;
 }

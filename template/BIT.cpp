@@ -80,6 +80,7 @@ int n;
 namespace BIT{
   int nn;ll t[_n];
   void update(int x,int val){while(x<=nn)t[x]+=val,x+=(x&-x);}
+  //這模板是1-base，而且update是把修改量加上去
   ll query(int x){ll res=0;while(x>0){res+=t[x],x-=(x&-x);}return res;}
   void init(int n_){nn=n_;}
 }

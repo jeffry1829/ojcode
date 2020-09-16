@@ -73,12 +73,16 @@ ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
 //#define end aononcncnccc
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-const int _n=2e5+10;
-int t,n,k,a[_n];
-ll ans;
-ll ten[11]={1,10,100,1000,10000,100000,1000000,10000000,100000000,1000000000,10000000000ll};
-map<PII,int> mp;
+const int _n=5010;
+int t,n,dp[_n][_n],ans[_n],suf[_n];
+string s;
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  cout<<(!0)<<'\n';
+  cin>>s;n=s.length();rep(i,0,n)dp[i][i]=0,dp[i][i+1]=1;
+  rep(j,2,n+1)rep(i,0,n+1-j){
+    int L=i,R=L+j,m=(L+R)/2;
+    if(s[L]==s[R-1] and (dp[L+1][R-1] or L+1==R-1))dp[L][R]=dp[L][m]+1;
+  }rep(j,1,n+1)rep(i,0,n+1-j)ans[dp[i][i+j]]++;
+  suf[n]=ans[n];per(i,1,n)suf[i]=suf[i+1]+ans[i];
+  rep(i,1,n+1)cout<<suf[i]<<' ';
   return 0;
 }

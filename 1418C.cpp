@@ -74,11 +74,14 @@ ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
 const int _n=2e5+10;
-int t,n,k,a[_n];
-ll ans;
-ll ten[11]={1,10,100,1000,10000,100000,1000000,10000000,100000000,1000000000,10000000000ll};
-map<PII,int> mp;
+int t,n,a[_n],dp[_n][2];
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  cout<<(!0)<<'\n';
+  cin>>t;while(t--){
+    cin>>n;rep(i,1,n+1)cin>>a[i]; dp[0][0]=1e5,dp[0][1]=0;
+    dp[1][0]=a[1],dp[1][1]=1e5;
+    rep(i,2,n+1)dp[i][0]=min(dp[i-2][1]+a[i-1]+a[i],dp[i-1][1]+a[i]),
+      dp[i][1]=min(dp[i-2][0],dp[i-1][0]);
+    cout<<min(dp[n][0],dp[n][1])<<'\n';
+  }
   return 0;
 }

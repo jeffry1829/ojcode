@@ -73,12 +73,24 @@ ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
 //#define end aononcncnccc
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-const int _n=2e5+10;
-int t,n,k,a[_n];
-ll ans;
-ll ten[11]={1,10,100,1000,10000,100000,1000000,10000000,100000000,1000000000,10000000000ll};
+const int _n=1e5+10;
+int t,n,a,b;
+VI remains;
+vector<PII> e,in;
 map<PII,int> mp;
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  cout<<(!0)<<'\n';
+  cin>>n;rep(i,0,n-1){cin>>a>>b;if(a>b)swap(a,b);mp[{a,b}]++;in.pb({a,b});}
+  rep(i,1,n+1)remains.pb(i); sort(all(in));
+  for(PII ii:in){
+    int tmp;
+    if(!mp[ii])continue;
+    if(ii.se<n){cout<<"NO\n";return 0;}
+    if((tmp=upper_bound(all(remains),ii.fi-1)-remains.begin())<mp[ii]-1){cout<<"NO\n";return 0;}
+    int prev=ii.fi;rep(i,tmp-mp[ii]+1,tmp)e.pb({prev,remains[i]}),prev=remains[i];
+    e.pb({prev,ii.se});
+    remains.erase(remains.begin()+tmp-mp[ii]+1,remains.begin()+tmp);
+    rep(i,0,SZ(remains))if(remains[i]==ii.fi||remains[i]==ii.se)remains.erase(remains.begin()+i);
+    mp[ii]=0;
+  }cout<<"YES\n";for(PII ii:e)cout<<ii.fi<<' '<<ii.se<<'\n';
   return 0;
 }

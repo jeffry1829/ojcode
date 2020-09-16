@@ -73,12 +73,28 @@ ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
 //#define end aononcncnccc
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-const int _n=2e5+10;
-int t,n,k,a[_n];
-ll ans;
-ll ten[11]={1,10,100,1000,10000,100000,1000000,10000000,100000000,1000000000,10000000000ll};
-map<PII,int> mp;
+const int _n=210;
+int t,n,aa,bb,far,dis[_n];
+VI G[_n];
+vector<PII> e;
+void dfs(int v,int fa,int no){
+  for(int vv : G[v])if(vv!=fa and vv!=no){
+    dis[vv]=dis[v]+1;
+    if(dis[vv]>dis[far])far=vv;
+    dfs(vv,v,no);
+  }
+}
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  cout<<(!0)<<'\n';
+  cin>>n;rep(i,0,n-1){cin>>aa>>bb;G[aa].pb(bb),G[bb].pb(aa);e.pb({aa,bb});}
+  int maxx=0;rep(i,0,n-1){
+    int u=e[i].fi,v=e[i].se;dis[u]=dis[v]=0;
+    far=u;dfs(u,v,v);
+    dis[far]=0;dfs(far,far,v);
+    int res1=dis[far];
+    far=v;dfs(v,u,u);
+    dis[far]=0;dfs(far,far,u);
+    int res2=dis[far];
+    maxx=max(maxx,res1*res2);
+  }cout<<maxx<<'\n';
   return 0;
 }

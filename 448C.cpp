@@ -45,7 +45,7 @@
 #pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
 using namespace std;
-//#define int long long
+#define int long long
 #define rep(i,a,n) for(int i=a;i<n;i++)
 #define per(i,a,n) for(int i=n-1;i>=a;i--)
 #define pb push_back
@@ -73,12 +73,58 @@ ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
 //#define end aononcncnccc
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-const int _n=2e5+10;
-int t,n,k,a[_n];
-ll ans;
-ll ten[11]={1,10,100,1000,10000,100000,1000000,10000000,100000000,1000000000,10000000000ll};
-map<PII,int> mp;
+const int _n=5010;
+int t,n,a[_n];
+namespace Seg{
+  int nn;
+  ll t[_n<<2],laz[_n<<2];
+  void pull(int v){t[v]=min(t[2*v+1],t[2*v+2]);}
+  void apply(int v, ll val){t[v]+=val,laz[v]+=val;}
+  void push(int v){
+    if(laz[v]!=0)apply(2*v+1,laz[v]),apply(2*v+2,laz[v]),laz[v]=0;
+  }
+  void build(int v, int l, int r){
+    if(l+1==r)t[v]=a[l];
+    else{int m=(l+r)>>1;build(2*v+1,l,m),build(2*v+2,m,r);pull(v);}
+  }
+  void add(int v,int l,int r,int ql,int qr,ll val){
+    if(r<=ql or qr<=l)return;
+    else if(ql<=l and r<=qr)apply(v,val);
+    else{
+      push(v);int m=(l+r)>>1;
+      add(2*v+1,l,m,ql,qr,val),add(2*v+2,m,r,ql,qr,val);
+      pull(v);
+    }
+  }
+  void add(int l,int r,ll val){add(0,0,nn,l,r,val);}
+  void add(int pos,ll val){add(0,0,nn,pos,pos+1,val);}
+  void init(int n_){nn=n_;build(0,0,nn);}
+  int lz(int v,int l,int r){
+    int m=(l+r)>>1;if(l+1==r)return l;
+    int res;push(v);
+    if(t[2*v+2]==0)res=lz(2*v+2,m,r);
+    else res=lz(2*v+1,l,m);
+    pull(v);return res;
+  }
+  int query(int v,int l,int r,int ql,int qr){
+    if(r<=ql or l>=qr)return 1e9+100;
+    if(ql<=l and qr>=r)return t[v];
+    int m=(l+r)>>1,res;push(v);
+    res=min(query(2*v+1,l,m,ql,qr),query(2*v+2,m,r,ql,qr));
+    pull(v);return res;
+  }
+}
+int f(int l,int r,int already){
+  int mn=Seg::query(0,0,n,l,r),res=mn-already,prev=0,st=-1,ed;
+  rep(i,l,r){
+    if(a[i]>mn and !prev)st=i;
+    if(a[i]<=mn and prev)ed=i,res+=f(st,ed,mn);
+    prev=(a[i]>mn);
+  }if(prev)res+=f(st,r,mn);
+  return min(r-l,res);
+}
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  cout<<(!0)<<'\n';
+  cin>>n;rep(i,0,n)cin>>a[i]; Seg::init(n);
+  cout<<f(0,n,0)<<'\n';
   return 0;
 }

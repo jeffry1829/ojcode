@@ -77,8 +77,24 @@ const int _n=2e5+10;
 int t,n,k,a[_n];
 ll ans;
 ll ten[11]={1,10,100,1000,10000,100000,1000000,10000000,100000000,1000000000,10000000000ll};
-map<PII,int> mp;
+struct pair_hash
+{
+	template <class T1, class T2>
+	std::size_t operator() (const std::pair<T1, T2> &pair) const
+	{
+		return std::hash<T1>()(pair.first) ^ std::hash<T2>()(pair.second);
+	}
+};
+unordered_map<PII,int,pair_hash> mp;
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  cout<<(!0)<<'\n';
+  cin>>n>>k;rep(i,0,n)cin>>a[i];
+  rep(i,0,n){
+    ans+=mp[{(k-a[i]%k)%k,1+log10(a[i])}];
+    rep(j,1,11)mp[{(1ull*a[i]*ten[j])%(1ull*k),j}]++;
+  }mp.clear();
+  per(i,0,n){
+    ans+=mp[{(k-a[i]%k)%k,1+log10(a[i])}];
+    rep(j,1,11)mp[{(1ull*a[i]*ten[j])%(1ull*k),j}]++;
+  }cout<<ans<<'\n';
   return 0;
 }

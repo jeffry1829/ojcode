@@ -45,7 +45,7 @@
 #pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
 using namespace std;
-//#define int long long
+#define int long long
 #define rep(i,a,n) for(int i=a;i<n;i++)
 #define per(i,a,n) for(int i=n-1;i>=a;i--)
 #define pb push_back
@@ -73,12 +73,18 @@ ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
 //#define end aononcncnccc
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-const int _n=2e5+10;
-int t,n,k,a[_n];
-ll ans;
-ll ten[11]={1,10,100,1000,10000,100000,1000000,10000000,100000000,1000000000,10000000000ll};
-map<PII,int> mp;
+const int _n=2010;
+int t,n,d1[_n<<1],d2[_n<<1],mp[_n][_n];
+PII u={1,1},v={1,2};
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  cout<<(!0)<<'\n';
+  cin>>n;rep(i,1,n+1)rep(j,1,n+1){cin>>mp[i][j];d1[i+j]+=mp[i][j],d2[i-j+n]+=mp[i][j];}
+  rep(i,1,n+1)rep(j,1,n+1){
+    if((i+j)&1){
+      if(d1[u.fi+u.se]+d2[u.fi-u.se+n]-mp[u.fi][u.se]<d1[i+j]+d2[i-j+n]-mp[i][j])u={i,j};
+    }else{
+      if(d1[v.fi+v.se]+d2[v.fi-v.se+n]-mp[v.fi][v.se]<d1[i+j]+d2[i-j+n]-mp[i][j])v={i,j};
+    }
+  }cout<<d1[u.fi+u.se]+d2[u.fi-u.se+n]-mp[u.fi][u.se]+d1[v.fi+v.se]+d2[v.fi-v.se+n]-mp[v.fi][v.se]<<'\n';
+  cout<<u.fi<<' '<<u.se<<' '<<v.fi<<' '<<v.se<<'\n';
   return 0;
 }
