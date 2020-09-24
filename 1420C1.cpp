@@ -45,7 +45,7 @@
 #pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
 using namespace std;
-//#define int long long
+#define int long long
 #define rep(i,a,n) for(int i=a;i<n;i++)
 #define per(i,a,n) for(int i=n-1;i>=a;i--)
 #define pb push_back
@@ -73,25 +73,17 @@ ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
 //#define end aononcncnccc
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-main(){ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-    int n,q;
-    set<int> p;
-    cin>>n>>q;
-    rep(i,0,n) {int tem; cin>>tem; p.insert(tem); }
-    rep(i,-1,q) {
-        if(i>=0){
-            int t,x;
-            cin>>t>>x;
-            if(t) p.insert(x); else p.erase(x);
-        }
-
-        int maxd = 0,sum=0;
-        if(p.size()>=2){
-            for(auto it=next(p.begin(),1);it!=p.end();it++) {int diff = *it-*next(it,-1);
-            maxd = max(maxd,diff); sum+=diff;}
-            cout<<sum-maxd<<'\n';
-        }
-        else
-            cout<<0<<'\n';
-    }
+const int _n=3e5+10;
+int t,n,q,a[_n],l,r,dp[_n][2];
+main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+  cin>>t;while(t--){
+    cin>>n>>q;rep(i,0,n)cin>>a[i];ll ans=0;
+    rep(i,0,n)dp[i][0]=dp[i][1]=0;
+    dp[0][0]=-1e5,dp[0][1]=a[0];
+    rep(i,1,n){
+      dp[i][0]=max(dp[i-1][0],dp[i-1][1]-a[i]);
+      dp[i][1]=max(dp[i-1][1],max(dp[i-1][0]+a[i],a[i]));
+    }cout<<max(dp[n-1][0],dp[n-1][1])<<'\n';
+  }
+  return 0;
 }

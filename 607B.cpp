@@ -73,25 +73,13 @@ ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
 //#define end aononcncnccc
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-main(){ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-    int n,q;
-    set<int> p;
-    cin>>n>>q;
-    rep(i,0,n) {int tem; cin>>tem; p.insert(tem); }
-    rep(i,-1,q) {
-        if(i>=0){
-            int t,x;
-            cin>>t>>x;
-            if(t) p.insert(x); else p.erase(x);
-        }
-
-        int maxd = 0,sum=0;
-        if(p.size()>=2){
-            for(auto it=next(p.begin(),1);it!=p.end();it++) {int diff = *it-*next(it,-1);
-            maxd = max(maxd,diff); sum+=diff;}
-            cout<<sum-maxd<<'\n';
-        }
-        else
-            cout<<0<<'\n';
-    }
+const int _n=510;
+int t,n,c[_n],dp[_n][_n];
+main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+  cin>>n;rep(i,0,n)cin>>c[i];rep(i,0,n)dp[i][i+1]=1;
+  rep(i,2,n+1)rep(j,0,n+1-i){
+    dp[j][j+i]=dp[j+1][j+i]+1;
+    rep(k,1,i)if(c[j]==c[j+k])dp[j][j+i]=min(dp[j][j+i],(j+1==j+k?1:dp[j+1][j+k])+dp[j+k+1][j+i]);
+  }cout<<dp[0][n]<<'\n';
+  return 0;
 }

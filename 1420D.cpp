@@ -73,25 +73,9 @@ ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
 //#define end aononcncnccc
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-main(){ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-    int n,q;
-    set<int> p;
-    cin>>n>>q;
-    rep(i,0,n) {int tem; cin>>tem; p.insert(tem); }
-    rep(i,-1,q) {
-        if(i>=0){
-            int t,x;
-            cin>>t>>x;
-            if(t) p.insert(x); else p.erase(x);
-        }
-
-        int maxd = 0,sum=0;
-        if(p.size()>=2){
-            for(auto it=next(p.begin(),1);it!=p.end();it++) {int diff = *it-*next(it,-1);
-            maxd = max(maxd,diff); sum+=diff;}
-            cout<<sum-maxd<<'\n';
-        }
-        else
-            cout<<0<<'\n';
-    }
+const int _n=3e5+10;
+int t,n,k,l[_n],r[_n];
+main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+  cin>>n>>k;
+  return 0;
 }

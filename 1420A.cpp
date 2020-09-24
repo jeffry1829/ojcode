@@ -73,25 +73,17 @@ ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
 //#define end aononcncnccc
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-main(){ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-    int n,q;
-    set<int> p;
-    cin>>n>>q;
-    rep(i,0,n) {int tem; cin>>tem; p.insert(tem); }
-    rep(i,-1,q) {
-        if(i>=0){
-            int t,x;
-            cin>>t>>x;
-            if(t) p.insert(x); else p.erase(x);
-        }
-
-        int maxd = 0,sum=0;
-        if(p.size()>=2){
-            for(auto it=next(p.begin(),1);it!=p.end();it++) {int diff = *it-*next(it,-1);
-            maxd = max(maxd,diff); sum+=diff;}
-            cout<<sum-maxd<<'\n';
-        }
-        else
-            cout<<0<<'\n';
+const int _n=5e4+10;
+int t,n,m,a[_n],aa[_n];
+main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+  cin>>t;while(t--){
+    cin>>n;rep(i,0,n){cin>>a[i];aa[i]=a[i];} sort(aa,aa+n,greater<int>());
+    int prev=-1;rep(i,0,n){
+      if(a[i]!=aa[i] or aa[i]==prev){cout<<"YES\n";goto A;}
+      prev=aa[i];
     }
+    cout<<"NO\n";
+    A:;
+  }
+  return 0;
 }
