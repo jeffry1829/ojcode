@@ -42,8 +42,10 @@
 #pragma GCC optimize("-fexpensive-optimizations")
 #pragma GCC optimize("inline-functions-called-once")
 #pragma GCC optimize("-fdelete-null-pointer-checks")
+#pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
 using namespace std;
+#define int long long
 #define rep(i,a,n) for(int i=a;i<n;i++)
 #define per(i,a,n) for(int i=n-1;i>=a;i--)
 #define pb push_back
@@ -64,27 +66,65 @@ const ll mod=1000000007;
 int rnd(int x){return mrand()%x;}
 ll powmod(ll a,ll b){ll res=1;a%=mod;assert(b>=0);for(;b;b>>=1){if(b&1)res=res*a%mod;a=a*a%mod;}return res;}
 ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
-#define rank oiajgpowsdjg
-const int N = 100;
-int parent[N], rank[N];
-inline void dsinit(int n) {for (int i = 0; i < n; i++)parent[i] = i;memset(rank, 0, sizeof rank);}
-inline int dsfind(int e) {return parent[e] == e ? e : parent[e] = dsfind(parent[e]);}
-inline void dsunion(int s1, int s2) {if (rank[s1] < rank[s2])swap(s1, s2);parent[s2] = s1;if (rank[s1] == rank[s2]) rank[s1]++;}
 #define y1 ojsapogjahg
 #define prev ojaposjdas
+#define rank oiajgpowsdjg
+#define left aijhgpiaejhgp
 //#define end aononcncnccc
-inline int pmod(int x, int divisor){int m = x % divisor;return m + ((m >> 31) & divisor);}
+inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-const int _n=2e5+10,MAXB=19;
-int n;
-namespace BIT{
-  int nn;ll t[_n];
-  void update(int x,int val){while(x<=nn)t[x]+=val,x+=(x&-x);}
-  //這模板是1-base，而且update是把修改量加上去
-  ll query(int x){ll res=0;while(x>0){res+=t[x],x-=(x&-x);}return res;}
-  void init(int n_){nn=n_;}
+const int _n=5010;
+int t,n,a[_n];
+namespace Seg{
+  int nn;
+  ll t[_n<<2],laz[_n<<2];
+  void pull(int v){t[v]=min(t[2*v+1],t[2*v+2]);}
+  void apply(int v, ll val){t[v]+=val,laz[v]+=val;}
+  void push(int v){
+    if(laz[v]!=0)apply(2*v+1,laz[v]),apply(2*v+2,laz[v]),laz[v]=0;
+  }
+  void build(int v, int l, int r){
+    if(l+1==r)t[v]=a[l];
+    else{int m=(l+r)>>1;build(2*v+1,l,m),build(2*v+2,m,r);pull(v);}
+  }
+  void add(int v,int l,int r,int ql,int qr,ll val){
+    if(r<=ql or qr<=l)return;
+    else if(ql<=l and r<=qr)apply(v,val);
+    else{
+      push(v);int m=(l+r)>>1;
+      add(2*v+1,l,m,ql,qr,val),add(2*v+2,m,r,ql,qr,val);
+      pull(v);
+    }
+  }
+  void add(int l,int r,ll val){add(0,0,nn,l,r,val);}
+  void add(int pos,ll val){add(0,0,nn,pos,pos+1,val);}
+  void init(int n_){nn=n_;build(0,0,nn);}
+  int lz(int v,int l,int r){
+    int m=(l+r)>>1;if(l+1==r)return l;
+    int res;push(v);
+    if(t[2*v+2]==0)res=lz(2*v+2,m,r);
+    else res=lz(2*v+1,l,m);
+    pull(v);return res;
+  }
+  int query(int v,int l,int r,int ql,int qr){
+    if(r<=ql or l>=qr)return 1e9+100;
+    if(ql<=l and qr>=r)return t[v];
+    int m=(l+r)>>1,res;push(v);
+    res=min(query(2*v+1,l,m,ql,qr),query(2*v+2,m,r,ql,qr));
+    pull(v);return res;
+  }
 }
-main(void) {cin.tie(0);ios_base::sync_with_stdio(0);
-  cin>>n;BIT::init(n);
+int f(int l,int r,int already){
+  int mn=Seg::query(0,0,n,l,r),res=mn-already,prev=0,st=-1,ed;
+  rep(i,l,r){
+    if(a[i]>mn and !prev)st=i;
+    if(a[i]<=mn and prev)ed=i,res+=f(st,ed,mn);
+    prev=(a[i]>mn);
+  }if(prev)res+=f(st,r,mn);
+  return min(r-l,res);
+}
+main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+  cin>>n;rep(i,0,n)cin>>a[i]; Seg::init(n);
+  cout<<f(0,n,0)<<'\n';
   return 0;
 }

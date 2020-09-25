@@ -42,8 +42,10 @@
 #pragma GCC optimize("-fexpensive-optimizations")
 #pragma GCC optimize("inline-functions-called-once")
 #pragma GCC optimize("-fdelete-null-pointer-checks")
+#pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
 using namespace std;
+//#define int long long
 #define rep(i,a,n) for(int i=a;i<n;i++)
 #define per(i,a,n) for(int i=n-1;i>=a;i--)
 #define pb push_back
@@ -64,27 +66,21 @@ const ll mod=1000000007;
 int rnd(int x){return mrand()%x;}
 ll powmod(ll a,ll b){ll res=1;a%=mod;assert(b>=0);for(;b;b>>=1){if(b&1)res=res*a%mod;a=a*a%mod;}return res;}
 ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
-#define rank oiajgpowsdjg
-const int N = 100;
-int parent[N], rank[N];
-inline void dsinit(int n) {for (int i = 0; i < n; i++)parent[i] = i;memset(rank, 0, sizeof rank);}
-inline int dsfind(int e) {return parent[e] == e ? e : parent[e] = dsfind(parent[e]);}
-inline void dsunion(int s1, int s2) {if (rank[s1] < rank[s2])swap(s1, s2);parent[s2] = s1;if (rank[s1] == rank[s2]) rank[s1]++;}
 #define y1 ojsapogjahg
 #define prev ojaposjdas
+#define rank oiajgpowsdjg
+#define left aijhgpiaejhgp
 //#define end aononcncnccc
-inline int pmod(int x, int divisor){int m = x % divisor;return m + ((m >> 31) & divisor);}
+inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-const int _n=2e5+10,MAXB=19;
-int n;
-namespace BIT{
-  int nn;ll t[_n];
-  void update(int x,int val){while(x<=nn)t[x]+=val,x+=(x&-x);}
-  //這模板是1-base，而且update是把修改量加上去
-  ll query(int x){ll res=0;while(x>0){res+=t[x],x-=(x&-x);}return res;}
-  void init(int n_){nn=n_;}
-}
-main(void) {cin.tie(0);ios_base::sync_with_stdio(0);
-  cin>>n;BIT::init(n);
+const int _n=1e6+10;
+int t,n,m,a[_n];
+bool can[1010][1010];
+main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+  cin>>n>>m;if(n>m){cout<<"YES\n";return 0;}
+  rep(i,0,n){cin>>a[i];a[i]%=m;}
+  can[0][a[0]]=1;rep(i,1,n){can[i][a[i]]=1;rep(j,0,m)if(can[i-1][j])can[i][j]=1,can[i][(a[i]+j)%m]=1;}
+  if(can[n-1][0])cout<<"YES\n";
+  else cout<<"NO\n";
   return 0;
 }

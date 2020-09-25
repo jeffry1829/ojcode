@@ -42,8 +42,10 @@
 #pragma GCC optimize("-fexpensive-optimizations")
 #pragma GCC optimize("inline-functions-called-once")
 #pragma GCC optimize("-fdelete-null-pointer-checks")
+#pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
 using namespace std;
+//#define int long long
 #define rep(i,a,n) for(int i=a;i<n;i++)
 #define per(i,a,n) for(int i=n-1;i>=a;i--)
 #define pb push_back
@@ -64,18 +66,32 @@ const ll mod=1000000007;
 int rnd(int x){return mrand()%x;}
 ll powmod(ll a,ll b){ll res=1;a%=mod;assert(b>=0);for(;b;b>>=1){if(b&1)res=res*a%mod;a=a*a%mod;}return res;}
 ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
-#define rank oiajgpowsdjg
-const int N = 100;
-int parent[N], rank[N];
-inline void dsinit(int n) {for (int i = 0; i < n; i++)parent[i] = i;memset(rank, 0, sizeof rank);}
-inline int dsfind(int e) {return parent[e] == e ? e : parent[e] = dsfind(parent[e]);}
-inline void dsunion(int s1, int s2) {if (rank[s1] < rank[s2])swap(s1, s2);parent[s2] = s1;if (rank[s1] == rank[s2]) rank[s1]++;}
 #define y1 ojsapogjahg
 #define prev ojaposjdas
+#define rank oiajgpowsdjg
+#define left aijhgpiaejhgp
 //#define end aononcncnccc
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-main(void) {cin.tie(0);ios_base::sync_with_stdio(0);
-  cout<<__gcd(1,__gcd(2,__gcd(6,4)));
-  return 0;
+main(){ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+    int n,q;
+    set<int> p;
+    cin>>n>>q;
+    rep(i,0,n) {int tem; cin>>tem; p.insert(tem); }
+    rep(i,-1,q) {
+        if(i>=0){
+            int t,x;
+            cin>>t>>x;
+            if(t) p.insert(x); else p.erase(x);
+        }
+
+        int maxd = 0,sum=0;
+        if(p.size()>=2){
+            for(auto it=next(p.begin(),1);it!=p.end();it++) {int diff = *it-*next(it,-1);
+            maxd = max(maxd,diff); sum+=diff;}
+            cout<<sum-maxd<<'\n';
+        }
+        else
+            cout<<0<<'\n';
+    }
 }

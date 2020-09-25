@@ -75,16 +75,26 @@ inline void dsunion(int s1, int s2) {if (rank[s1] < rank[s2])swap(s1, s2);parent
 //#define end aononcncnccc
 inline int pmod(int x, int divisor){int m = x % divisor;return m + ((m >> 31) & divisor);}
 //head
-const int _n=2e5+10,MAXB=19;
-int n;
+const int _n=1e6+10,MAXB=21;
+int n,q,cnt[_n],a,k;
 namespace BIT{
   int nn;ll t[_n];
   void update(int x,int val){while(x<=nn)t[x]+=val,x+=(x&-x);}
-  //這模板是1-base，而且update是把修改量加上去
   ll query(int x){ll res=0;while(x>0){res+=t[x],x-=(x&-x);}return res;}
   void init(int n_){nn=n_;}
 }
 main(void) {cin.tie(0);ios_base::sync_with_stdio(0);
-  cin>>n;BIT::init(n);
+  cin>>n>>q;BIT::init(n);rep(i,1,n+1){cin>>a;cnt[a]++;}
+  rep(i,1,n+1)BIT::update(i,cnt[i]);
+  while(q--){
+    cin>>k;if(k>0)cnt[k]++,BIT::update(k,1);
+    else{
+      int res=0;per(j,0,MAXB)if(res+(1<<j)<=n and BIT::query(res+(1<<j))<-k)res+=(1<<j);
+      res++,cnt[res]--,BIT::update(res,-1);
+    }
+  }if(BIT::query(n)==0)cout<<0<<'\n';
+  else{
+    rep(i,1,n+1)if(BIT::query(i)>0){cout<<i<<'\n';return 0;}
+  }
   return 0;
 }

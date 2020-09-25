@@ -89,15 +89,28 @@ int lca(int a,int b){
   per(j,0,MAXB)if(~fa[a][j] and fa[a][j]!=fa[b][j])a=fa[a][j],b=fa[b][j];
   return fa[a][0];
 }
+<<<<<<< HEAD
+=======
+bool cmp(const int& a,const int& b){return dep[a]<dep[b];}
+>>>>>>> bcb82c2e43f4a4977aac2be34685c656cf819d48
 main(void) {cin.tie(0);ios_base::sync_with_stdio(0);
   cin>>n>>m;rep(i,0,n-1){cin>>u>>v;G[u].pb(v),G[v].pb(u);}
   dfs(1,-1,0);rep(i,1,n+1)rep(j,1,MAXB)fa[i][j]=-1; bfa();
   while(m--){
+<<<<<<< HEAD
     cin>>k;VI cnt(0,k+1);rep(i,0,k){
       cin>>v;
       if(!cnt[dep[v]])cnt[dep[v]]=v;
       
     }
+=======
+    cin>>k;VI ks;rep(i,0,k){cin>>v;ks.pb(v);}
+    rep(i,0,k)ks[i]=(fa[ks[i]][0]==-1?1:fa[ks[i]][0]);
+    sort(all(ks),cmp);
+    rep(i,1,k)if(lca(ks[i-1],ks[i])!=ks[i-1]){cout<<"NO\n";goto A;}
+    cout<<"YES\n";
+    A:;
+>>>>>>> bcb82c2e43f4a4977aac2be34685c656cf819d48
   }
   return 0;
 }

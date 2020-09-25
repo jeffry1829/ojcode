@@ -109,6 +109,13 @@ namespace Seg{
     else res=lz(2*v+1,l,m);
     pull(v);return res;
   }
+  int query(int v,int l,int r,int ql,int qr){ //懶標記未確認運作
+    if(r<=ql or l>=qr)return 1e9+100;
+    if(ql<=l and qr>=r)return t[v];
+    int m=(l+r)>>1,res;push(v);
+    res=min(query(2*v+1,l,m,ql,qr),query(2*v+2,m,r,ql,qr));
+    pull(v);return res;
+  }
 }
 main(void) {cin.tie(0);ios_base::sync_with_stdio(0);
 
