@@ -73,15 +73,18 @@ inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 #define left aijhgpiaejhgp
 //#define end aononcncnccc
 //head
-const int _n=1010,_m=10010;
-int t,n,m,dp[_n][_m],a[_n];
+const int _n=2010;
+int t,n,x,y;
+vector<PII> ps;
+map<PII,int> cnt;
+ll ans;
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  while(cin>>n>>m and n){
-    rep(i,0,n)cin>>a[i]; rep(i,1,m+1)dp[0][i]=0; dp[0][gcd(a[0],m)]=1;
-    rep(i,1,n){
-      rep(j,1,m+1)dp[i][j]=dp[i-1][j]; dp[i][gcd(a[i],m)]=max(1,dp[i][gcd(a[i],m)]);
-      rep(j,1,m+1)dp[i][gcd(j*10+a[i],m)]=max(dp[i][gcd(j*10+a[i],m)],dp[i-1][j]+1);
-    }cout<<dp[n-1][1]<<'\n';
-  }
+  cin>>n;rep(i,0,n){cin>>x>>y;ps.pb({x,y});}
+  rep(i,0,n-1)rep(j,i+1,n){
+    PII v={ps[j].fi-ps[i].fi,ps[j].se-ps[i].se};
+    if(v.fi<0)v.fi=-v.fi,v.se=-v.se;
+    if(v.fi==0 and v.se<0)v.se=-v.se;
+    ans+=cnt[v]; cnt[v]++;
+  }cout<<ans/2<<'\n';
   return 0;
 }

@@ -73,15 +73,35 @@ inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 #define left aijhgpiaejhgp
 //#define end aononcncnccc
 //head
-const int _n=1010,_m=10010;
-int t,n,m,dp[_n][_m],a[_n];
+const int _n=13;
+int t,n,m,a,b,w,k;
+PII prev[1<<_n][_n],dis[1<<_n][_n];
+struct WE{int x,y,d;};
+vector<WE> e;
+VI ks;
+bool ok(int x){
+  rep(i,0,SZ(ks))if(!(x&(1<<ks[i])))return 0;
+  return 1;
+}
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  while(cin>>n>>m and n){
-    rep(i,0,n)cin>>a[i]; rep(i,1,m+1)dp[0][i]=0; dp[0][gcd(a[0],m)]=1;
-    rep(i,1,n){
-      rep(j,1,m+1)dp[i][j]=dp[i-1][j]; dp[i][gcd(a[i],m)]=max(1,dp[i][gcd(a[i],m)]);
-      rep(j,1,m+1)dp[i][gcd(j*10+a[i],m)]=max(dp[i][gcd(j*10+a[i],m)],dp[i-1][j]+1);
-    }cout<<dp[n-1][1]<<'\n';
-  }
+  cin>>n>>m;rep(i,0,m){cin>>a>>b>>w;e.pb({a,b,w}),e.pb({b,a,w});};
+  cin>>k;rep(i,0,k){cin>>a;ks.pb(a);} rep(i,0,1<<_n)rep(j,0,n)dis[i][j].fi=1e5; dis[1<<ks[0]][ks[0]]={0,1}; prev[1<<ks[0]][ks[0]]={-1,-1};
+  rep(_,0,n-1){
+    rep(__,0,SZ(e)){
+      int u=e[__].x,v=e[__].y,d=e[__].d;
+      rep(i,0,1<<n)if((i&(1<<u)) and (i&(1<<v))){
+        if(dis[i][v].fi>dis[i][u].fi+d)dis[i][v].fi=dis[i][u].fi+d,dis[i][v].se=dis[i][u].se+1,prev[i][v]={i,u};
+        if(dis[i][v].fi>dis[i^(1<<v)][u].fi+d)dis[i][v].fi=dis[i^(1<<v)][u].fi+d,dis[i][v].se=dis[i^(1<<v)][u].se+1,prev[i][v]={i^(1<<v),u};
+        if(dis[i][v].fi==dis[i][u].fi+d)if(dis[i][v].se>=dis[i][u].se and (dis[i][v].se>dis[i][u].se or u<prev[i][v].se))prev[i][v]={i,u};
+        if(dis[i][v].fi==dis[i^(1<<v)][u].fi+d)if(dis[i][v].se>=dis[i^(1<<v)][u].se and (dis[i][v].se>dis[i^(1<<v)][u].se or u<prev[i][v].se))prev[i][v]={i^(1<<v),u};
+      }
+    }
+  }PII ans={1e9,1e9},ans2={0,0};rep(i,0,1<<n)if(ok(i))rep(j,0,n)if(dis[i][j].fi<ans.fi or (dis[i][j].fi==ans.fi and dis[i][j].se<ans.se))ans={dis[i][j].fi,dis[i][j].se},ans2={i,j};
+  cout<<"Minimum travel distance: "<<ans.fi<<"\nTravel route: ";
+  ans={ans2.fi,ans2.se};
+  VI AC;while(~ans.fi){
+    AC.pb(ans.se);
+    ans=prev[ans.fi][ans.se];
+  }per(i,0,SZ(AC))cout<<AC[i]<<' '; cout<<'\n';
   return 0;
 }

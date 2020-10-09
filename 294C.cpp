@@ -73,15 +73,18 @@ inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 #define left aijhgpiaejhgp
 //#define end aononcncnccc
 //head
-const int _n=1010,_m=10010;
-int t,n,m,dp[_n][_m],a[_n];
+const int _n=1010;
+int t,n,m,a[_n],fac[_n],inv[_n],c;
+VI cnt;
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  while(cin>>n>>m and n){
-    rep(i,0,n)cin>>a[i]; rep(i,1,m+1)dp[0][i]=0; dp[0][gcd(a[0],m)]=1;
-    rep(i,1,n){
-      rep(j,1,m+1)dp[i][j]=dp[i-1][j]; dp[i][gcd(a[i],m)]=max(1,dp[i][gcd(a[i],m)]);
-      rep(j,1,m+1)dp[i][gcd(j*10+a[i],m)]=max(dp[i][gcd(j*10+a[i],m)],dp[i-1][j]+1);
-    }cout<<dp[n-1][1]<<'\n';
-  }
+  cin>>n>>m;rep(i,0,m){cin>>t;a[t]=1;}
+  a[n+1]=1;rep(i,1,n+2){
+    if(a[i]==1 and c)cnt.pb(c),c=0;
+    if(a[i]==0)c++;
+  }c=0;if(a[1]==0)c+=cnt[0]-1;if(a[n]==0)c+=cnt.back()-1;
+  fac[0]=1;rep(i,1,n+1)fac[i]=1ll*fac[i-1]*i%mod;
+  inv[n]=powmod(fac[n],mod-2);per(i,0,n)inv[i]=1ll*inv[i+1]*(i+1)%mod;
+  ll ans=fac[n-m];rep(i,0,SZ(cnt))ans=ans*inv[cnt[i]]%mod;
+  ans=ans*powmod(2,n-m-SZ(cnt)-c)%mod;cout<<ans<<'\n';
   return 0;
 }

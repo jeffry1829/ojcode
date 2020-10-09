@@ -73,15 +73,27 @@ inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 #define left aijhgpiaejhgp
 //#define end aononcncnccc
 //head
-const int _n=1010,_m=10010;
-int t,n,m,dp[_n][_m],a[_n];
+const int _n=1e5+10;
+ll t,n,nn,ans;
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  while(cin>>n>>m and n){
-    rep(i,0,n)cin>>a[i]; rep(i,1,m+1)dp[0][i]=0; dp[0][gcd(a[0],m)]=1;
-    rep(i,1,n){
-      rep(j,1,m+1)dp[i][j]=dp[i-1][j]; dp[i][gcd(a[i],m)]=max(1,dp[i][gcd(a[i],m)]);
-      rep(j,1,m+1)dp[i][gcd(j*10+a[i],m)]=max(dp[i][gcd(j*10+a[i],m)],dp[i-1][j]+1);
-    }cout<<dp[n-1][1]<<'\n';
+  cin>>t;while(t--){
+    cin>>n;nn=n;ans=0;
+    if(n&1)n--;
+    while(n>0){
+      if(n<8){
+        if(n&1)ans++,n--;
+        else ans+=n/2,n/=2;
+        if(n==0)continue;
+        if(n&1)n--;
+        else n/=2;
+        continue;
+      }
+      assert(n%2==0);
+      if(n%4==0)ans++,n-=2;
+      else ans+=n/2,n/=2,n--;
+    }
+    if(nn&1)cout<<nn-ans<<'\n';
+    else cout<<ans<<'\n';
   }
   return 0;
 }

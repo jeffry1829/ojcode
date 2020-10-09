@@ -73,15 +73,21 @@ inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 #define left aijhgpiaejhgp
 //#define end aononcncnccc
 //head
-const int _n=1010,_m=10010;
-int t,n,m,dp[_n][_m],a[_n];
+const int _n=3e5+10,MAXB=20;
+int t,n,a[_n],prev[_n],dis[_n],ans[_n],last[_n];
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  while(cin>>n>>m and n){
-    rep(i,0,n)cin>>a[i]; rep(i,1,m+1)dp[0][i]=0; dp[0][gcd(a[0],m)]=1;
-    rep(i,1,n){
-      rep(j,1,m+1)dp[i][j]=dp[i-1][j]; dp[i][gcd(a[i],m)]=max(1,dp[i][gcd(a[i],m)]);
-      rep(j,1,m+1)dp[i][gcd(j*10+a[i],m)]=max(dp[i][gcd(j*10+a[i],m)],dp[i-1][j]+1);
-    }cout<<dp[n-1][1]<<'\n';
+  cin>>t;while(t--){
+    cin>>n;rep(i,1,n+1)cin>>a[i];
+    rep(i,0,n+1)ans[i]=dis[i]=prev[i]=last[i]=0;
+    rep(i,1,n+1)ans[i]=1e9;
+    rep(i,1,n+1){
+      dis[a[i]]=max(dis[a[i]],i-prev[a[i]]);
+      last[a[i]]=i;
+      prev[a[i]]=i;
+    }rep(i,1,n+1)if(last[i])dis[i]=max(dis[i],n+1-last[i]);
+    rep(i,1,n+1)ans[dis[i]]=min(ans[dis[i]],i);
+    rep(i,2,n+1)ans[i]=min(ans[i],ans[i-1]);
+    rep(i,1,n+1)cout<<(ans[i]==1e9?-1:ans[i])<<' '; cout<<'\n';
   }
   return 0;
 }

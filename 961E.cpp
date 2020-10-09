@@ -73,15 +73,23 @@ inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 #define left aijhgpiaejhgp
 //#define end aononcncnccc
 //head
-const int _n=1010,_m=10010;
-int t,n,m,dp[_n][_m],a[_n];
+const int _n=2e5+10;
+int t,n,top;
+ll ans;
+PII a[_n],aa[_n];
+namespace BIT{
+  int nn;ll t[_n];
+  void update(int x,int val){while(x<=nn)t[x]+=val,x+=(x&-x);}
+  //這模板是1-base，而且update是把修改量加上去
+  ll query(int x){ll res=0;while(x>0){res+=t[x],x-=(x&-x);}return res;}
+  void init(int n_){nn=n_;}
+}
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  while(cin>>n>>m and n){
-    rep(i,0,n)cin>>a[i]; rep(i,1,m+1)dp[0][i]=0; dp[0][gcd(a[0],m)]=1;
-    rep(i,1,n){
-      rep(j,1,m+1)dp[i][j]=dp[i-1][j]; dp[i][gcd(a[i],m)]=max(1,dp[i][gcd(a[i],m)]);
-      rep(j,1,m+1)dp[i][gcd(j*10+a[i],m)]=max(dp[i][gcd(j*10+a[i],m)],dp[i-1][j]+1);
-    }cout<<dp[n-1][1]<<'\n';
-  }
+  cin>>n;rep(i,1,n+1){cin>>a[i].fi;a[i].se=i;if(a[i].fi>n)a[i].fi=n;aa[i]=a[i];}BIT::init(n);
+  sort(a+1,a+n+1);rep(i,1,n+1){
+    while(top<a[i].fi)BIT::update(aa[++top].fi,1);
+    ans+=BIT::query(n)-BIT::query(a[i].se-1);
+  }rep(i,1,n+1)if(aa[i].fi>=i)ans--;
+  cout<<ans/2<<'\n';
   return 0;
 }

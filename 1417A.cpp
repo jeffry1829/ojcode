@@ -73,15 +73,16 @@ inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 #define left aijhgpiaejhgp
 //#define end aononcncnccc
 //head
-const int _n=1010,_m=10010;
-int t,n,m,dp[_n][_m],a[_n];
+const int _n=1010;
+int t,n,k,a[_n];
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  while(cin>>n>>m and n){
-    rep(i,0,n)cin>>a[i]; rep(i,1,m+1)dp[0][i]=0; dp[0][gcd(a[0],m)]=1;
-    rep(i,1,n){
-      rep(j,1,m+1)dp[i][j]=dp[i-1][j]; dp[i][gcd(a[i],m)]=max(1,dp[i][gcd(a[i],m)]);
-      rep(j,1,m+1)dp[i][gcd(j*10+a[i],m)]=max(dp[i][gcd(j*10+a[i],m)],dp[i-1][j]+1);
-    }cout<<dp[n-1][1]<<'\n';
+  cin>>t;while(t--){
+    cin>>n>>k;rep(i,0,n)cin>>a[i]; int minn=1e9,maxx=-1; ll ans=0;
+    rep(i,0,n)minn=min(minn,a[i]);
+    bool z=0;rep(i,0,n){
+      if(a[i]==minn and !z){z=1;continue;}
+      if(k-a[i]>=0)ans+=(k-a[i])/minn;
+    }cout<<ans<<'\n';
   }
   return 0;
 }

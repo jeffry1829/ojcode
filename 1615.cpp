@@ -73,15 +73,31 @@ inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 #define left aijhgpiaejhgp
 //#define end aononcncnccc
 //head
-const int _n=1010,_m=10010;
-int t,n,m,dp[_n][_m],a[_n];
+const int _n=1e6+10;
+ll t,a,b;
+bool p[_n];
+inline void sieve(int n) {
+  for (int i = 2; i <= n; i++) p[i] = 1;
+  for (int i = 2; i <= n; i++)
+    if (p[i])
+      for (ll j = 1ll * i * i; j < n; j += i) p[j] = 0;
+}
+bool isp(ll x){
+  ll hf=sqrt(x);
+  rep(i,2,hf+1)if(x%i==0)return 0;
+  return 1;
+}
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  while(cin>>n>>m and n){
-    rep(i,0,n)cin>>a[i]; rep(i,1,m+1)dp[0][i]=0; dp[0][gcd(a[0],m)]=1;
-    rep(i,1,n){
-      rep(j,1,m+1)dp[i][j]=dp[i-1][j]; dp[i][gcd(a[i],m)]=max(1,dp[i][gcd(a[i],m)]);
-      rep(j,1,m+1)dp[i][gcd(j*10+a[i],m)]=max(dp[i][gcd(j*10+a[i],m)],dp[i-1][j]+1);
-    }cout<<dp[n-1][1]<<'\n';
+  sieve(_n-1);while(cin>>a>>b){
+    if(a>b)swap(a,b);ll ans=0;
+    rep(i,1,a+1)if(p[i])ans++;
+    t=1ll;rep(i,a+1,b+1)t*=i;t+=1;
+    assert(t<=1000000000000ll);
+    ll hf=sqrt(t);
+    rep(i,1,hf+1)if(t%i==0){
+      if(isp(i) and i>a)ans++;
+      if(isp(t/(1ll*i)) and t/(1ll*i)>a)ans++;
+    }cout<<ans<<'\n';
   }
   return 0;
 }

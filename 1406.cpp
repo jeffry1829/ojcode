@@ -59,7 +59,7 @@ using namespace std;
 #define abs(x) (((x)<0)?(-(x)):(x))
 typedef vector<int> VI;
 typedef long long ll;
-typedef pair<int,int> PII;
+typedef pair<ll,ll> PII;
 typedef double db;
 mt19937 mrand(random_device{}());
 const ll mod=1000000007;
@@ -73,15 +73,22 @@ inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 #define left aijhgpiaejhgp
 //#define end aononcncnccc
 //head
-const int _n=1010,_m=10010;
-int t,n,m,dp[_n][_m],a[_n];
+const int _n=1e5+10,MAXB=41;
+ll t,n;
+PII a[_n];
+bool f(ll x){
+  ll cnt=a[0].se-x;
+  rep(i,1,n){
+    if(cnt>=0)cnt=max(0ll,cnt+a[i-1].fi-a[i].fi);
+    else cnt+=a[i-1].fi-a[i].fi;
+    cnt+=a[i].se-x;
+  }return cnt>=0;
+}
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  while(cin>>n>>m and n){
-    rep(i,0,n)cin>>a[i]; rep(i,1,m+1)dp[0][i]=0; dp[0][gcd(a[0],m)]=1;
-    rep(i,1,n){
-      rep(j,1,m+1)dp[i][j]=dp[i-1][j]; dp[i][gcd(a[i],m)]=max(1,dp[i][gcd(a[i],m)]);
-      rep(j,1,m+1)dp[i][gcd(j*10+a[i],m)]=max(dp[i][gcd(j*10+a[i],m)],dp[i-1][j]+1);
-    }cout<<dp[n-1][1]<<'\n';
+  while(cin>>n){
+    rep(i,0,n)cin>>a[i].fi>>a[i].se;
+    ll res=0;per(j,0,MAXB)if(f(res+(1ll<<j)))res+=(1ll<<j);
+    cout<<res<<'\n';
   }
   return 0;
 }

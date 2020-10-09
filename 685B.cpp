@@ -73,15 +73,26 @@ inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 #define left aijhgpiaejhgp
 //#define end aononcncnccc
 //head
-const int _n=1010,_m=10010;
-int t,n,m,dp[_n][_m],a[_n];
+const int _n=3e5+10;
+int t,n,q,v,p,dp[_n],sz[_n],mx[_n],fa[_n];
+VI G[_n];
+void dfsSz(int v,int faa){
+  fa[v]=faa,sz[v]=1;
+  for(int u:G[v])if(u!=faa)dfsSz(u,v),sz[v]+=sz[u],mx[v]=max(mx[v],sz[u]);
+}
+void dfs(int v,int faa){
+  for(int u:G[v])if(u!=faa)dfs(u,v);
+  for(int u:G[v])if(u!=faa and sz[u]>sz[v]/2){
+    u=dp[u];while(mx[u]<=sz[v]/2)dp[v]=u,u=fa[u];
+    return;
+  }
+  dp[v]=v;
+}
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  while(cin>>n>>m and n){
-    rep(i,0,n)cin>>a[i]; rep(i,1,m+1)dp[0][i]=0; dp[0][gcd(a[0],m)]=1;
-    rep(i,1,n){
-      rep(j,1,m+1)dp[i][j]=dp[i-1][j]; dp[i][gcd(a[i],m)]=max(1,dp[i][gcd(a[i],m)]);
-      rep(j,1,m+1)dp[i][gcd(j*10+a[i],m)]=max(dp[i][gcd(j*10+a[i],m)],dp[i-1][j]+1);
-    }cout<<dp[n-1][1]<<'\n';
+  cin>>n>>q;rep(i,2,n+1){cin>>p;G[i].pb(p),G[p].pb(i);}
+  dfsSz(1,0),mx[0]=sz[1],dfs(1,0);
+  while(q--){
+    cin>>v;cout<<dp[v]<<'\n';
   }
   return 0;
 }

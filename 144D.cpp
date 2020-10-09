@@ -42,10 +42,8 @@
 #pragma GCC optimize("-fexpensive-optimizations")
 #pragma GCC optimize("inline-functions-called-once")
 #pragma GCC optimize("-fdelete-null-pointer-checks")
-#pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
 using namespace std;
-//#define int long long
 #define rep(i,a,n) for(int i=a;i<n;i++)
 #define per(i,a,n) for(int i=n-1;i>=a;i--)
 #define pb push_back
@@ -66,22 +64,40 @@ const ll mod=1000000007;
 int rnd(int x){return mrand()%x;}
 ll powmod(ll a,ll b){ll res=1;a%=mod;assert(b>=0);for(;b;b>>=1){if(b&1)res=res*a%mod;a=a*a%mod;}return res;}
 ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
-inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
+#define rank oiajgpowsdjg
 #define y1 ojsapogjahg
 #define prev ojaposjdas
-#define rank oiajgpowsdjg
-#define left aijhgpiaejhgp
 //#define end aononcncnccc
+inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-const int _n=1010,_m=10010;
-int t,n,m,dp[_n][_m],a[_n];
-main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  while(cin>>n>>m and n){
-    rep(i,0,n)cin>>a[i]; rep(i,1,m+1)dp[0][i]=0; dp[0][gcd(a[0],m)]=1;
-    rep(i,1,n){
-      rep(j,1,m+1)dp[i][j]=dp[i-1][j]; dp[i][gcd(a[i],m)]=max(1,dp[i][gcd(a[i],m)]);
-      rep(j,1,m+1)dp[i][gcd(j*10+a[i],m)]=max(dp[i][gcd(j*10+a[i],m)],dp[i-1][j]+1);
-    }cout<<dp[n-1][1]<<'\n';
-  }
+const int _n=1e5+10;
+int t,n,m,s,l,u,v,w,dis[_n],fa[_n];
+vector<PII> G[_n];
+bool vis[_n];
+struct WE{
+  int f,t,d;
+  bool operator<(const WE& rhs)const{return d>rhs.d;}
+} e[_n];
+priority_queue<WE> pq;
+ll ans;
+main(void) {cin.tie(0);ios_base::sync_with_stdio(0);
+  cin>>n>>m>>s;rep(i,0,m){cin>>u>>v>>w;G[u].pb({v,w}),G[v].pb({u,w});e[i]={u,v,w};}
+  cin>>l;rep(i,1,n+1)dis[i]=1e9;
+  dis[s]=0;for(PII uu:G[s])pq.push({s,uu.fi,uu.se});vis[s]=1;
+  rep(_,0,n-1){
+    WE now=pq.top();pq.pop();
+    if(vis[now.t]){_--;continue;}
+    dis[now.t]=now.d;vis[now.t]=1;fa[now.t]=now.f;
+    for(PII uu:G[now.t])if(!vis[uu.fi])pq.push({now.t,uu.fi,now.d+uu.se});
+  }rep(i,1,n+1)if(dis[i]==l)ans++;
+  rep(i,0,m){
+    int a=l-dis[e[i].f],b=l-dis[e[i].t];
+    if(fa[e[i].f]!=e[i].t and dis[e[i].f]<l and dis[e[i].f]+e[i].d>l and dis[e[i].f]+a<=dis[e[i].t]+e[i].d-a)ans++;
+    if(fa[e[i].t]!=e[i].f and dis[e[i].t]<l and dis[e[i].t]+e[i].d>l and dis[e[i].t]+b<=dis[e[i].f]+e[i].d-b)ans++;
+    if(fa[e[i].f]!=e[i].t and dis[e[i].f]<l and dis[e[i].f]+e[i].d>l and
+      dis[e[i].t]+b<=dis[e[i].f]+e[i].d-b and dis[e[i].f]+a<=dis[e[i].t]+e[i].d-a 
+      and fa[e[i].t]!=e[i].f and dis[e[i].t]<l and dis[e[i].t]+e[i].d>l 
+      and l-dis[e[i].f]==e[i].d-l+dis[e[i].t])ans--;
+  }cout<<ans<<'\n';
   return 0;
 }

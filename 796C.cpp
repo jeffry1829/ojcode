@@ -73,15 +73,23 @@ inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 #define left aijhgpiaejhgp
 //#define end aononcncnccc
 //head
-const int _n=1010,_m=10010;
-int t,n,m,dp[_n][_m],a[_n];
+const int _n=3e5+10;
+int t,n,a[_n],cmx,csmx,mx=-1e9-1,smx=-1e9-1,cnt,uu,v;
+VI G[_n];
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  while(cin>>n>>m and n){
-    rep(i,0,n)cin>>a[i]; rep(i,1,m+1)dp[0][i]=0; dp[0][gcd(a[0],m)]=1;
-    rep(i,1,n){
-      rep(j,1,m+1)dp[i][j]=dp[i-1][j]; dp[i][gcd(a[i],m)]=max(1,dp[i][gcd(a[i],m)]);
-      rep(j,1,m+1)dp[i][gcd(j*10+a[i],m)]=max(dp[i][gcd(j*10+a[i],m)],dp[i-1][j]+1);
-    }cout<<dp[n-1][1]<<'\n';
+  cin>>n;rep(i,1,n+1)cin>>a[i];rep(i,1,n){cin>>uu>>v;G[uu].pb(v),G[v].pb(uu);}
+  rep(i,1,n+1)mx=max(mx,a[i]);rep(i,1,n+1)if(a[i]!=mx)smx=max(smx,a[i]);
+  rep(i,1,n+1)if(a[i]==mx)cmx++;rep(i,1,n+1)if(a[i]==smx)csmx++;
+  if(cmx==1){
+    rep(i,1,n+1)if(a[i]==mx)for(int u:G[i])if(a[u]==smx)cnt++;
+    if(cnt==csmx)cout<<mx<<'\n';
+    else cout<<max(mx,smx+2)<<'\n';
+  }else{
+    rep(i,1,n+1){
+      cnt=0;if(a[i]==mx)cnt++;
+      for(int u:G[i])if(a[u]==mx)cnt++;
+      if(cnt==cmx){cout<<mx+1<<'\n';return 0;}
+    }cout<<mx+2<<'\n';
   }
   return 0;
 }

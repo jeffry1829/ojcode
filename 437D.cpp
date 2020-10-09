@@ -73,15 +73,26 @@ inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 #define left aijhgpiaejhgp
 //#define end aononcncnccc
 //head
-const int _n=1010,_m=10010;
-int t,n,m,dp[_n][_m],a[_n];
+const int _n=1e5+10;
+int t,n,m,a[_n],x,y;
+struct WE{
+  int f,t,w;
+  bool operator<(const WE& rhs){return w>rhs.w;}
+};
+vector<WE> e;
+ll ans;
+#define rank oiajgpowsdjg
+int parent[_n], rank[_n];
+inline void dsinit(int n) {for (int i = 1; i <= n; i++)parent[i] = i;memset(rank, 0, sizeof rank);}
+inline int dsfind(int e) {return parent[e] == e ? e : parent[e] = dsfind(parent[e]);}
+inline void dsunion(int s1, int s2) {if (rank[s1] <= rank[s2])swap(s1, s2);parent[s2] = s1;rank[s1]+=rank[s2];}
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  while(cin>>n>>m and n){
-    rep(i,0,n)cin>>a[i]; rep(i,1,m+1)dp[0][i]=0; dp[0][gcd(a[0],m)]=1;
-    rep(i,1,n){
-      rep(j,1,m+1)dp[i][j]=dp[i-1][j]; dp[i][gcd(a[i],m)]=max(1,dp[i][gcd(a[i],m)]);
-      rep(j,1,m+1)dp[i][gcd(j*10+a[i],m)]=max(dp[i][gcd(j*10+a[i],m)],dp[i-1][j]+1);
-    }cout<<dp[n-1][1]<<'\n';
-  }
+  cin>>n>>m;rep(i,1,n+1)cin>>a[i];
+  rep(i,0,m){cin>>x>>y;t=min(a[x],a[y]);e.pb({x,y,t});}
+  dsinit(n);sort(all(e));rep(i,1,n+1)rank[i]=1;
+  rep(i,0,SZ(e)){
+    x=dsfind(e[i].f),y=dsfind(e[i].t);
+    if(x!=y)ans+=1ll*rank[x]*rank[y]*e[i].w,dsunion(x,y);
+  }cout<<setprecision(20)<<(db)ans/((db)(1ll*n*(n-1)/2ll))<<'\n';
   return 0;
 }
