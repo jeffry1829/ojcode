@@ -1,5 +1,5 @@
-//#pragma GCC optimize(1)
-//#pragma GCC optimize(2)
+#pragma GCC optimize(1)
+#pragma GCC optimize(2)
 #pragma GCC optimize(3)
 #pragma GCC optimize("Ofast")
 #pragma GCC optimize("inline")
@@ -42,10 +42,8 @@
 #pragma GCC optimize("-fexpensive-optimizations")
 #pragma GCC optimize("inline-functions-called-once")
 #pragma GCC optimize("-fdelete-null-pointer-checks")
-#pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
 using namespace std;
-//#define int long long
 #define rep(i,a,n) for(int i=a;i<n;i++)
 #define per(i,a,n) for(int i=n-1;i>=a;i--)
 #define pb push_back
@@ -56,52 +54,50 @@ using namespace std;
 #define SZ(x) ((int)(x).size())
 #define min(a,b) (((a)<(b))?(a):(b))
 #define max(a,b) (((a)>(b))?(a):(b))
-#define abs(x) (((x)<0)?(-(x)):(x))
+#define abs(x) ((x<0)?(-x):(x))
 typedef vector<int> VI;
 typedef long long ll;
 typedef pair<int,int> PII;
 typedef double db;
 mt19937 mrand(random_device{}());
-const ll mod=998244353;
+const ll mod=1000000007;
 int rnd(int x){return mrand()%x;}
 ll powmod(ll a,ll b){ll res=1;a%=mod;assert(b>=0);for(;b;b>>=1){if(b&1)res=res*a%mod;a=a*a%mod;}return res;}
 ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
-#define y1 ojsapogjahg
-#define prev ojaposjdas
 #define rank oiajgpowsdjg
-#define left aijhgpiaejhgp
-//#define end aononcncnccc
-inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
-#define la kaofjpfo
+const int N = 100;
+int parent[N], rank[N];
+inline void dsinit(int n) {for (int i = 0; i < n; i++)parent[i] = i;memset(rank, 0, sizeof rank);}
+inline int dsfind(int e) {return parent[e] == e ? e : parent[e] = dsfind(parent[e]);}
+inline void dsunion(int s1, int s2) {if (rank[s1] < rank[s2])swap(s1, s2);parent[s2] = s1;if (rank[s1] == rank[s2]) rank[s1]++;}
 //head
-const int _n=3e5+10;
-int t,n,k,cnt[_n<<1],num[_n<<1];
-PII la[_n];
-VI v;
-int fac[_n],inv[_n];
-void exgcd(int a,int b,int& d,int& x,int& y){
-  if(!b)x=1,y=0,d=a;
-  else exgcd(b,a%b,d,y,x),y=(1ll*y-1ll*x*(a/b)%mod+mod)%mod;
+const int _n=1e5+10,MAXB=18;
+int n,k,a,b,q,p,dep[_n],fa[_n][MAXB],v[10];
+VI G[_n];
+void dfs(int v,int faa,int d){
+  dep[v]=d;fa[v][0]=faa;
+  rep(i,0,SZ(G[v]))if(faa!=G[v][i])dfs(G[v][i],v,d+1);
 }
-int C(int m,int n){
-  if(m<n)return 0;
-  if(m<mod and n<mod)return 1ll*fac[m]*inv[n]%mod*inv[m-n]%mod;
-  return 1ll*C(m/mod,n/mod)*C(m%mod,n%mod)%mod;
+void bfa(){
+  rep(j,1,MAXB)rep(i,1,n+1)if(~fa[i][j-1])
+    fa[i][j]=fa[fa[i][j-1]][j-1];
 }
-void genInv(){
-  fac[0]=1;rep(i,1,n+1)fac[i]=1ll*fac[i-1]*i%mod;
-  //int tmp1,tmp2;rep(i,0,n+1)exgcd(fac[i],mod,tmp1,inv[i],tmp2);
-  inv[n]=powmod(fac[n],mod-2);per(i,0,n)inv[i]=1ll*inv[i+1]*(i+1)%mod;
+int lca(int a,int b){
+  if(dep[a]<dep[b])swap(a,b);
+  per(j,0,MAXB)if(~fa[a][j] and dep[fa[a][j]]>=dep[b])a=fa[a][j];
+  if(a==b)return a;
+  per(j,0,MAXB)if(~fa[a][j] and fa[a][j]!=fa[b][j])a=fa[a][j],b=fa[b][j];
+  return fa[a][0];
 }
-main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  cin>>n>>k;rep(i,0,n){cin>>la[i].fi>>la[i].se;v.pb(la[i].fi),v.pb(la[i].se);}
-  sort(all(v));int nn=unique(all(v))-v.begin(); genInv(); ll ans=0;
-  rep(i,0,n){
-    la[i].fi=lower_bound(v.begin(),v.begin()+nn,la[i].fi)-v.begin();
-    la[i].se=lower_bound(v.begin(),v.begin()+nn,la[i].se)-v.begin();
-  }rep(i,0,n)cnt[la[i].fi]++,cnt[la[i].se+1]--,num[la[i].fi]++;
-  rep(i,1,nn)cnt[i]=cnt[i-1]+cnt[i];
-  rep(i,0,nn)ans=(ans+C(cnt[i],k)-C(cnt[i]-num[i],k)+mod)%mod;
-  cout<<ans<<'\n';
+int dis(int a,int b){return dep[a]+dep[b]-2*dep[lca(a,b)]+1;}
+int f(int s,int f,int t){return (dis(s,f)+dis(t,f)-dis(s,t)+1)/2;}
+main(void) {cin.tie(0);ios_base::sync_with_stdio(0);
+  cin>>n>>q;rep(i,2,n+1){cin>>p;G[i].pb(p),G[p].pb(i);}
+  dfs(1,-1,0);rep(i,1,n+1)rep(j,1,MAXB)fa[i][j]=-1; bfa();
+  while(q--){
+    cin>>v[0]>>v[1]>>v[2];//s,f,t
+    int ans=max(f(v[1],v[0],v[2]),max(f(v[0],v[1],v[2]),f(v[0],v[2],v[1])));
+    cout<<ans<<'\n';
+  }
   return 0;
 }

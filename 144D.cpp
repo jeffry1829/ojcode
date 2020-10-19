@@ -71,33 +71,33 @@ ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
 inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
 const int _n=1e5+10;
-int t,n,m,s,l,u,v,w,dis[_n];
-vector<PII> G[_n],G2[_n];
+int t,n,m,s,l,u,v,w,dis[_n],fa[_n];
+vector<PII> G[_n];
 bool vis[_n];
 struct WE{
-  int f,t,w,we;
-  bool operator<(const WE& rhs)const{return w>rhs.w;}
-};
+  int f,t,d;
+  bool operator<(const WE& rhs)const{return d>rhs.d;}
+} e[_n];
 priority_queue<WE> pq;
 ll ans;
-void dfs(int v,int fa){
-  if(dis[v]>=l){ans++;return;}
-  for(PII uu:G2[v])if(uu.fi!=fa)dfs(uu.fi,v);
-  for(PII uu:G[v])if(uu.fi!=fa and dis[v]+uu.se>l)ans++;
-}
 main(void) {cin.tie(0);ios_base::sync_with_stdio(0);
-  cin>>n>>m>>s;while(m--){cin>>u>>v>>w;G[u].pb({v,w}),G[v].pb({u,w});}cin>>l;
-  rep(i,1,n+1)dis[i]=1e9;
-  dis[s]=0;for(PII uu:G[s])pq.push({s,uu.fi,uu.se,uu.se});vis[s]=1;
-  rep(o,0,n-1){
+  cin>>n>>m>>s;rep(i,0,m){cin>>u>>v>>w;G[u].pb({v,w}),G[v].pb({u,w});e[i]={u,v,w};}
+  cin>>l;rep(i,1,n+1)dis[i]=1e9;
+  dis[s]=0;for(PII uu:G[s])pq.push({s,uu.fi,uu.se});vis[s]=1;
+  rep(_,0,n-1){
     WE now=pq.top();pq.pop();
-    if(vis[now.t])continue;
-    dis[now.t]=now.w;vis[now.t]=1;
-    G2[now.f].pb({now.t,now.we}),G2[now.t].pb({now.f,now.we});
-    for(PII uu:G[now.t])if(!vis[uu.fi])pq.push({now.t,uu.fi,now.w+uu.se,uu.se});
-  }
-  dfs(s,0);
-  rep(i,1,n+1)cout<<dis[i]<<' '; cout<<'\n';
-  cout<<ans<<'\n';
+    if(vis[now.t]){_--;continue;}
+    dis[now.t]=now.d;vis[now.t]=1;fa[now.t]=now.f;
+    for(PII uu:G[now.t])if(!vis[uu.fi])pq.push({now.t,uu.fi,now.d+uu.se});
+  }rep(i,1,n+1)if(dis[i]==l)ans++;
+  rep(i,0,m){
+    int a=l-dis[e[i].f],b=l-dis[e[i].t];
+    if(fa[e[i].f]!=e[i].t and dis[e[i].f]<l and dis[e[i].f]+e[i].d>l and dis[e[i].f]+a<=dis[e[i].t]+e[i].d-a)ans++;
+    if(fa[e[i].t]!=e[i].f and dis[e[i].t]<l and dis[e[i].t]+e[i].d>l and dis[e[i].t]+b<=dis[e[i].f]+e[i].d-b)ans++;
+    if(fa[e[i].f]!=e[i].t and dis[e[i].f]<l and dis[e[i].f]+e[i].d>l and
+      dis[e[i].t]+b<=dis[e[i].f]+e[i].d-b and dis[e[i].f]+a<=dis[e[i].t]+e[i].d-a 
+      and fa[e[i].t]!=e[i].f and dis[e[i].t]<l and dis[e[i].t]+e[i].d>l 
+      and l-dis[e[i].f]==e[i].d-l+dis[e[i].t])ans--;
+  }cout<<ans<<'\n';
   return 0;
 }

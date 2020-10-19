@@ -62,46 +62,46 @@ typedef long long ll;
 typedef pair<int,int> PII;
 typedef double db;
 mt19937 mrand(random_device{}());
-const ll mod=998244353;
+const ll mod=1000000007;
 int rnd(int x){return mrand()%x;}
 ll powmod(ll a,ll b){ll res=1;a%=mod;assert(b>=0);for(;b;b>>=1){if(b&1)res=res*a%mod;a=a*a%mod;}return res;}
 ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
+inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 #define y1 ojsapogjahg
 #define prev ojaposjdas
 #define rank oiajgpowsdjg
 #define left aijhgpiaejhgp
 //#define end aononcncnccc
-inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
-#define la kaofjpfo
 //head
-const int _n=3e5+10;
-int t,n,k,cnt[_n<<1],num[_n<<1];
-PII la[_n];
-VI v;
-int fac[_n],inv[_n];
-void exgcd(int a,int b,int& d,int& x,int& y){
-  if(!b)x=1,y=0,d=a;
-  else exgcd(b,a%b,d,y,x),y=(1ll*y-1ll*x*(a/b)%mod+mod)%mod;
-}
-int C(int m,int n){
-  if(m<n)return 0;
-  if(m<mod and n<mod)return 1ll*fac[m]*inv[n]%mod*inv[m-n]%mod;
-  return 1ll*C(m/mod,n/mod)*C(m%mod,n%mod)%mod;
-}
-void genInv(){
-  fac[0]=1;rep(i,1,n+1)fac[i]=1ll*fac[i-1]*i%mod;
-  //int tmp1,tmp2;rep(i,0,n+1)exgcd(fac[i],mod,tmp1,inv[i],tmp2);
-  inv[n]=powmod(fac[n],mod-2);per(i,0,n)inv[i]=1ll*inv[i+1]*(i+1)%mod;
+const int _n=13;
+int t,n,m,a,b,w,k;
+PII prev[1<<_n][_n],dis[1<<_n][_n];
+struct WE{int x,y,d;};
+vector<WE> e;
+VI ks;
+bool ok(int x){
+  rep(i,0,SZ(ks))if(!(x&(1<<ks[i])))return 0;
+  return 1;
 }
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  cin>>n>>k;rep(i,0,n){cin>>la[i].fi>>la[i].se;v.pb(la[i].fi),v.pb(la[i].se);}
-  sort(all(v));int nn=unique(all(v))-v.begin(); genInv(); ll ans=0;
-  rep(i,0,n){
-    la[i].fi=lower_bound(v.begin(),v.begin()+nn,la[i].fi)-v.begin();
-    la[i].se=lower_bound(v.begin(),v.begin()+nn,la[i].se)-v.begin();
-  }rep(i,0,n)cnt[la[i].fi]++,cnt[la[i].se+1]--,num[la[i].fi]++;
-  rep(i,1,nn)cnt[i]=cnt[i-1]+cnt[i];
-  rep(i,0,nn)ans=(ans+C(cnt[i],k)-C(cnt[i]-num[i],k)+mod)%mod;
-  cout<<ans<<'\n';
+  cin>>n>>m;rep(i,0,m){cin>>a>>b>>w;e.pb({a,b,w}),e.pb({b,a,w});};
+  cin>>k;rep(i,0,k){cin>>a;ks.pb(a);} rep(i,0,1<<_n)rep(j,0,n)dis[i][j].fi=1e5; dis[1<<ks[0]][ks[0]]={0,1}; prev[1<<ks[0]][ks[0]]={-1,-1};
+  rep(_,0,n-1){
+    rep(__,0,SZ(e)){
+      int u=e[__].x,v=e[__].y,d=e[__].d;
+      rep(i,0,1<<n)if((i&(1<<u)) and (i&(1<<v))){
+        if(dis[i][v].fi>dis[i][u].fi+d)dis[i][v].fi=dis[i][u].fi+d,dis[i][v].se=dis[i][u].se+1,prev[i][v]={i,u};
+        if(dis[i][v].fi>dis[i^(1<<v)][u].fi+d)dis[i][v].fi=dis[i^(1<<v)][u].fi+d,dis[i][v].se=dis[i^(1<<v)][u].se+1,prev[i][v]={i^(1<<v),u};
+        if(dis[i][v].fi==dis[i][u].fi+d)if(dis[i][v].se>=dis[i][u].se and (dis[i][v].se>dis[i][u].se or u<prev[i][v].se))prev[i][v]={i,u};
+        if(dis[i][v].fi==dis[i^(1<<v)][u].fi+d)if(dis[i][v].se>=dis[i^(1<<v)][u].se and (dis[i][v].se>dis[i^(1<<v)][u].se or u<prev[i][v].se))prev[i][v]={i^(1<<v),u};
+      }
+    }
+  }PII ans={1e9,1e9},ans2={0,0};rep(i,0,1<<n)if(ok(i))rep(j,0,n)if(dis[i][j].fi<ans.fi or (dis[i][j].fi==ans.fi and dis[i][j].se<ans.se))ans={dis[i][j].fi,dis[i][j].se},ans2={i,j};
+  cout<<"Minimum travel distance: "<<ans.fi<<"\nTravel route: ";
+  ans={ans2.fi,ans2.se};
+  VI AC;while(~ans.fi){
+    AC.pb(ans.se);
+    ans=prev[ans.fi][ans.se];
+  }per(i,0,SZ(AC))cout<<AC[i]<<' '; cout<<'\n';
   return 0;
 }

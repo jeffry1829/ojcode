@@ -62,46 +62,40 @@ typedef long long ll;
 typedef pair<int,int> PII;
 typedef double db;
 mt19937 mrand(random_device{}());
-const ll mod=998244353;
+const ll mod=1000000007;
 int rnd(int x){return mrand()%x;}
 ll powmod(ll a,ll b){ll res=1;a%=mod;assert(b>=0);for(;b;b>>=1){if(b&1)res=res*a%mod;a=a*a%mod;}return res;}
 ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
+inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 #define y1 ojsapogjahg
 #define prev ojaposjdas
 #define rank oiajgpowsdjg
 #define left aijhgpiaejhgp
 //#define end aononcncnccc
-inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
-#define la kaofjpfo
 //head
-const int _n=3e5+10;
-int t,n,k,cnt[_n<<1],num[_n<<1];
-PII la[_n];
-VI v;
-int fac[_n],inv[_n];
-void exgcd(int a,int b,int& d,int& x,int& y){
-  if(!b)x=1,y=0,d=a;
-  else exgcd(b,a%b,d,y,x),y=(1ll*y-1ll*x*(a/b)%mod+mod)%mod;
-}
-int C(int m,int n){
-  if(m<n)return 0;
-  if(m<mod and n<mod)return 1ll*fac[m]*inv[n]%mod*inv[m-n]%mod;
-  return 1ll*C(m/mod,n/mod)*C(m%mod,n%mod)%mod;
-}
-void genInv(){
-  fac[0]=1;rep(i,1,n+1)fac[i]=1ll*fac[i-1]*i%mod;
-  //int tmp1,tmp2;rep(i,0,n+1)exgcd(fac[i],mod,tmp1,inv[i],tmp2);
-  inv[n]=powmod(fac[n],mod-2);per(i,0,n)inv[i]=1ll*inv[i+1]*(i+1)%mod;
+const int _n=1010;
+int t,n,m,x,y;
+VI G[_n];
+struct WE{
+  int t,x,y;
+  bool operator<(const WE& rhs)const{return t<rhs.t;}
+};
+vector<WE> ms;
+int dis(WE& a,WE& b){return abs(a.x-b.x)+abs(a.y-b.y);}
+int mat[_n],vis[_n];
+bool dfs(int u,int T){
+  for(int v:G[u])if(vis[v]!=T){
+    vis[v]=T;if(mat[v]==-1 or dfs(mat[v],T)){mat[v]=u;return 1;}
+  }return 0;
 }
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  cin>>n>>k;rep(i,0,n){cin>>la[i].fi>>la[i].se;v.pb(la[i].fi),v.pb(la[i].se);}
-  sort(all(v));int nn=unique(all(v))-v.begin(); genInv(); ll ans=0;
-  rep(i,0,n){
-    la[i].fi=lower_bound(v.begin(),v.begin()+nn,la[i].fi)-v.begin();
-    la[i].se=lower_bound(v.begin(),v.begin()+nn,la[i].se)-v.begin();
-  }rep(i,0,n)cnt[la[i].fi]++,cnt[la[i].se+1]--,num[la[i].fi]++;
-  rep(i,1,nn)cnt[i]=cnt[i-1]+cnt[i];
-  rep(i,0,nn)ans=(ans+C(cnt[i],k)-C(cnt[i]-num[i],k)+mod)%mod;
-  cout<<ans<<'\n';
+  cin>>n;while(n--){
+    cin>>m;ms.clear();rep(i,0,m)G[i].clear();
+    memset(mat,-1,sizeof mat);memset(vis,0,sizeof(vis[0])*(m+1));
+    rep(i,0,m){cin>>t>>x>>y;ms.pb({t,x,y});}sort(all(ms));
+    rep(i,0,m-1)rep(j,i+1,m)if(ms[j].t-ms[i].t>=dis(ms[j],ms[i]))G[i].pb(j);
+    int T=0,cnt=0;rep(i,0,m)if(dfs(i,++T))cnt++;
+    cout<<m-cnt<<'\n';
+  }
   return 0;
 }
