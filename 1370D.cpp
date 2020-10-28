@@ -73,6 +73,24 @@ inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 #define left aijhgpiaejhgp
 //#define end aononcncnccc
 //head
+const int _n=2e5+10,MAXB=19;
+int t,n,k,a[_n],aa[_n];
+bool ok(int x){
+  int cnt1=0,cnt2=0,ind=1;
+  rep(i,1,n+1){
+    if(ind&1)ind++,cnt1++;
+    else if(a[i]<=aa[x])ind++,cnt1++;
+  }
+  ind=1;rep(i,1,n+1){
+    if(!(ind&1))ind++,cnt2++;
+    else if(a[i]<=aa[x])ind++,cnt2++;
+  }
+  if(cnt1<k and cnt2<k)return 0;
+  return 1;
+}
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  
+  cin>>n>>k;rep(i,1,n+1){cin>>a[i];aa[i]=a[i];}sort(aa+1,aa+n+1);
+  int res=0;per(j,0,MAXB)if(res+(1<<j)<=n and !ok(res+(1<<j)))res+=(1<<j);
+  cout<<aa[res+1]<<'\n';
+  return 0;
 }
