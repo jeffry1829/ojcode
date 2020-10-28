@@ -114,7 +114,7 @@ vector<pair<db,db>> CoverSegment(C &a,C &b){
     else res.pb({l,r});
   }return res;
 }
-db CircleUnionArea(vector<C> c){//circles should be identical
+db CircleUnionArea(vector<C> c){//circles should be distinct
   db res=0;
   rep(i,0,SZ(c)){
     db w=0;vector<pair<db,db>> s={{2*pi,9}},z;
