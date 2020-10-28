@@ -42,8 +42,10 @@
 #pragma GCC optimize("-fexpensive-optimizations")
 #pragma GCC optimize("inline-functions-called-once")
 #pragma GCC optimize("-fdelete-null-pointer-checks")
+#pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
 using namespace std;
+//#define int long long
 #define rep(i,a,n) for(int i=a;i<n;i++)
 #define per(i,a,n) for(int i=n-1;i>=a;i--)
 #define pb push_back
@@ -64,37 +66,56 @@ const ll mod=1000000007;
 int rnd(int x){return mrand()%x;}
 ll powmod(ll a,ll b){ll res=1;a%=mod;assert(b>=0);for(;b;b>>=1){if(b&1)res=res*a%mod;a=a*a%mod;}return res;}
 ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
-#define rank oiajgpowsdjg
-const int N = 100;
-int parent[N], rank[N];
-inline void dsinit(int n) {for (int i = 0; i < n; i++)parent[i] = i;memset(rank, 0, sizeof rank);}
-inline int dsfind(int e) {return parent[e] == e ? e : parent[e] = dsfind(parent[e]);}
-inline void dsunion(int s1, int s2) {if (rank[s1] < rank[s2])swap(s1, s2);parent[s2] = s1;if (rank[s1] == rank[s2]) rank[s1]++;}
+inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 #define y1 ojsapogjahg
 #define prev ojaposjdas
+#define rank oiajgpowsdjg
+#define left aijhgpiaejhgp
 //#define end aononcncnccc
-inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //head
-const int _n=1010;
-int t,n,m,ho[_n][_n],ve[_n][_n],hpre[_n][_n],vpre[_n][_n];
-char mp[_n][_n];
-struct WE{int x,y,s;};
-vector<WE> ans;
-main(void) {cin.tie(0);ios_base::sync_with_stdio(0);
-  cin>>n>>m;rep(i,1,n+1)cin>>(mp[i]+1);
-  rep(i,1,n+1)rep(j,1,m+1)hpre[i][j]=hpre[i][j-1]+(mp[i][j]=='*');
-  rep(j,1,m+1)rep(i,1,n+1)vpre[i][j]=vpre[i-1][j]+(mp[i][j]=='*');
-  rep(i,1,n+1)rep(j,1,m+1){
-    int hres=0;per(k,0,11)if(j+hres+(1<<k)<=m and j-hres-(1<<k)>=1 and hpre[i][j+hres+(1<<k)]-hpre[i][j-hres-(1<<k)-1]==1+2*(hres+(1<<k)))hres+=(1<<k);
-    int vres=0;per(k,0,11)if(i+vres+(1<<k)<=n and i-vres-(1<<k)>=1 and vpre[i+vres+(1<<k)][j]-vpre[i-vres-(1<<k)-1][j]==1+2*(vres+(1<<k)))vres+=(1<<k);
-    if(hres and vres)ans.pb({i,j,min(hres,vres)});
+const db eps=1e-8;
+bool same(db a,db b){return abs(a-b)<eps;}
+struct P{
+  db x,y;
+  P():x(0),y(0){}
+  P(db x,db y):x(x),y(y){}
+  P operator+(P b){return P(x+b.x,y+b.y);}
+  P operator-(P b){return P(x-b.x,y-b.y);}
+  P operator*(db b){return P(x*b,y*b);}
+  P operator/(db b){return P(x/b,y/b);}
+  db operator*(P b){return x*b.x+y*b.y;}
+  db operator^(P b){return x*b.y-y*b.x;}
+  db abs(){return hypot(x,y);}
+  P unit(){return *this/abs();}
+  P spin(db o){
+    db c=cos(o),s=sin(o);
+    return P(c*x-s*y,s*x+c*y);
   }
-  rep(k,0,SZ(ans)){
-    int x=ans[k].x,y=ans[k].y,s=ans[k].s;
-    rep(i,x-s,x+s+1)mp[i][y]='.';
-    rep(i,y-s,y+s+1)mp[x][i]='.';
-  }
-  rep(i,1,n+1)rep(j,1,m+1)if(mp[i][j]!='.'){cout<<-1<<'\n';return 0;}
-  cout<<SZ(ans)<<'\n';rep(k,0,SZ(ans))cout<<ans[k].x<<' '<<ans[k].y<<' '<<ans[k].s<<'\n';
+  db angle(){return atan2(y,x);}
+};
+struct L{
+    // ax + by + c = 0
+    db a,b,c,o;
+    P pa,pb;
+    L():a(0),b(0),c(0),o(0),pa(),pb(){}
+    L(P pa,P pb):a(pa.y-pb.y),b(pb.x-pa.x),c(pa^pb),o(atan2(-a,b)),pa(pa),pb(pb){}
+    P project(P p){return pa+(pb-pa).unit()*((pb-pa)*(p-pa)/(pb-pa).abs());}
+    P reflect(P p){return p+(project(p)-p)*2;}
+    db get_ratio(P p){return (p-pa)*(pb-pa)/((pb-pa).abs()*(pb-pa).abs());}
+};
+bool SegmentIntersect(P p1, P p2, P p3, P p4) {
+    if (max(p1.x, p2.x) < min(p3.x, p4.x) || max(p3.x, p4.x) < min(p1.x, p2.x)) return false;
+    if (max(p1.y, p2.y) < min(p3.y, p4.y) || max(p3.y, p4.y) < min(p1.y, p2.y)) return false;
+    return sign((p3 - p1) ^ (p4 - p1)) * sign((p3 - p2) ^ (p4 - p2)) <= 0 &&
+           sign((p1 - p3) ^ (p2 - p3)) * sign((p1 - p4) ^ (p2 - p4)) <= 0;
+}
+
+bool parallel(L x, L y) { return same(x.a * y.b, x.b * y.a); }
+
+P Intersect(L x, L y) { return P(-x.b * y.c + x.c * y.b, x.a * y.c - x.c * y.a) / (-x.a * y.b + x.b * y.a); }
+const int _n=1e5+10;
+int t,n,m;
+main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+
   return 0;
 }
