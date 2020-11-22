@@ -45,7 +45,7 @@
 #pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
 using namespace std;
-#define int long long
+//#define int long long
 #define rep(i,a,n) for(int i=a;i<n;i++)
 #define per(i,a,n) for(int i=n-1;i>=a;i--)
 #define pb push_back
@@ -73,27 +73,30 @@ inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 #define left aijhgpiaejhgp
 //#define end aononcncnccc
 //head
-const int _n=2e5+10;
-int t,n,a[_n],b[_n],c[_n],uu,vv,ans[_n];
-VI G[_n];
-PII dfs(int v,int fa){
-  PII cnt;cnt.fi=0,cnt.se=0;
-  if(b[v]!=c[v]){
-    if(b[v]==0)cnt.fi++;
-    else cnt.se++;
-  }
-  for(int u:G[v])if(u!=fa){
-    PII res=dfs(u,v);
-    if(a[v]>=a[u])
-      cnt.fi+=res.fi-min(res.fi,res.se),cnt.se+=res.se-min(res.fi,res.se),ans[v]+=ans[u];
-    else cnt.fi+=res.fi,cnt.se+=res.se,ans[v]+=ans[u]-2ll*a[u]*min(res.fi,res.se);
-  }ans[v]+=a[v]*min(cnt.fi,cnt.se)*2ll;
-  return cnt;
-}
+const int _n=1e5+10;
+const ll inf=1e18;
+int t,n,m,k,u,v,x,s,y,ans,train[_n];
+ll dis[_n];
+struct WE{int to,w;};
+struct W{ll f,t,w;
+bool operator<(const W& rhs)const{return w>rhs.w;}};
+vector<WE> G[_n];
+priority_queue<W> pq;
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  cin>>n;rep(i,1,n+1)cin>>a[i]>>b[i]>>c[i];
-  rep(i,0,n-1){cin>>uu>>vv;G[uu].pb(vv),G[vv].pb(uu);}
-  PII res=dfs(1,0);if(res.fi!=res.se)cout<<"-1\n";
-  else cout<<ans[1]<<'\n';
+  cin>>n>>m>>k;rep(i,0,m){cin>>u>>v>>x;G[u].pb({v,x}),G[v].pb({u,x});}
+  rep(i,0,k){
+    cin>>s>>y;
+    if(!train[s])train[s]=y;
+    else if(train[s])ans++,train[s]=min(train[s],y);
+  }rep(i,1,n+1)dis[i]=inf;
+  rep(i,2,n+1)if(train[i])pq.push({0,i,train[i]});
+  pq.push({0,1,0});while(!pq.empty()){
+    W now=pq.top();pq.pop();if(dis[now.t]!=inf)continue;
+    dis[now.t]=now.w;
+    for(WE& u:G[now.t]){
+      if(dis[u.to]==inf)pq.push({now.t,u.to,dis[now.t]+u.w});
+      if(train[u.to] and dis[now.t]+u.w<=train[u.to])ans++,train[u.to]=0;
+    }
+  }cout<<ans<<'\n';
   return 0;
 }

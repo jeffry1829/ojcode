@@ -74,26 +74,26 @@ inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //#define end aononcncnccc
 //head
 const int _n=2e5+10;
-int t,n,a[_n],b[_n],c[_n],uu,vv,ans[_n];
-VI G[_n];
-PII dfs(int v,int fa){
-  PII cnt;cnt.fi=0,cnt.se=0;
-  if(b[v]!=c[v]){
-    if(b[v]==0)cnt.fi++;
-    else cnt.se++;
-  }
-  for(int u:G[v])if(u!=fa){
-    PII res=dfs(u,v);
-    if(a[v]>=a[u])
-      cnt.fi+=res.fi-min(res.fi,res.se),cnt.se+=res.se-min(res.fi,res.se),ans[v]+=ans[u];
-    else cnt.fi+=res.fi,cnt.se+=res.se,ans[v]+=ans[u]-2ll*a[u]*min(res.fi,res.se);
-  }ans[v]+=a[v]*min(cnt.fi,cnt.se)*2ll;
-  return cnt;
-}
+int t,n,a[_n],b[_n],in[_n],val;
+VI ans;
+queue<int> q;
+stack<int> st;
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  cin>>n;rep(i,1,n+1)cin>>a[i]>>b[i]>>c[i];
-  rep(i,0,n-1){cin>>uu>>vv;G[uu].pb(vv),G[vv].pb(uu);}
-  PII res=dfs(1,0);if(res.fi!=res.se)cout<<"-1\n";
-  else cout<<ans[1]<<'\n';
+  cin>>n;rep(i,1,n+1)cin>>a[i];rep(i,1,n+1)cin>>b[i];
+  rep(i,1,n+1)if(b[i]!=-1)in[b[i]]++;
+  rep(i,1,n+1)if(!in[i])q.push(i);
+  while(!q.empty()){
+    int x=q.front();q.pop();
+    if(a[x]>=0){
+      ans.pb(x);
+      val+=a[x];if(b[x]!=-1)a[b[x]]+=a[x];
+    }else st.push(x);
+    if(b[x]!=-1){in[b[x]]--;if(!in[b[x]])q.push(b[x]);}
+  }while(!st.empty()){
+    int x=st.top();st.pop();ans.pb(x);
+    val+=a[x];
+  }
+  cout<<val<<'\n';
+  rep(i,0,n)cout<<ans[i]<<' '; cout<<'\n';
   return 0;
 }

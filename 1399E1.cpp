@@ -73,27 +73,34 @@ inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 #define left aijhgpiaejhgp
 //#define end aononcncnccc
 //head
-const int _n=2e5+10;
-int t,n,a[_n],b[_n],c[_n],uu,vv,ans[_n];
-VI G[_n];
-PII dfs(int v,int fa){
-  PII cnt;cnt.fi=0,cnt.se=0;
-  if(b[v]!=c[v]){
-    if(b[v]==0)cnt.fi++;
-    else cnt.se++;
-  }
-  for(int u:G[v])if(u!=fa){
-    PII res=dfs(u,v);
-    if(a[v]>=a[u])
-      cnt.fi+=res.fi-min(res.fi,res.se),cnt.se+=res.se-min(res.fi,res.se),ans[v]+=ans[u];
-    else cnt.fi+=res.fi,cnt.se+=res.se,ans[v]+=ans[u]-2ll*a[u]*min(res.fi,res.se);
-  }ans[v]+=a[v]*min(cnt.fi,cnt.se)*2ll;
-  return cnt;
+const int _n=1e5+10;
+int t,n,S,u,v,w,ans,sum,cnt[_n];
+struct WE{int t,w;};
+struct W{int f,t,w;};
+struct P{int w,cnt;
+bool operator<(const P& rhs)const{return w*cnt-(w/2)*cnt<rhs.w*rhs.cnt-(rhs.w/2)*rhs.cnt;}};
+vector<WE> G[_n];
+vector<W> e;
+priority_queue<P> pq;
+void dfs(int v,int fa){
+  if(v!=1 and SZ(G[v])==1 and G[v][0].t==fa)cnt[v]=1;
+  for(WE& u:G[v])if(u.t!=fa)e.pb({v,u.t,u.w}),dfs(u.t,v),cnt[v]+=cnt[u.t];
 }
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  cin>>n;rep(i,1,n+1)cin>>a[i]>>b[i]>>c[i];
-  rep(i,0,n-1){cin>>uu>>vv;G[uu].pb(vv),G[vv].pb(uu);}
-  PII res=dfs(1,0);if(res.fi!=res.se)cout<<"-1\n";
-  else cout<<ans[1]<<'\n';
+  cin>>t;while(t--){
+    cin>>n>>S;sum=0,ans=0;rep(i,0,n+1)G[i].clear();e.clear();
+    while(!pq.empty())pq.pop();
+    rep(i,0,n-1){cin>>u>>v>>w;G[u].pb({v,w}),G[v].pb({u,w});}
+    dfs(1,0);rep(i,0,n-1)pq.push({e[i].w,cnt[e[i].t]}),sum+=e[i].w*cnt[e[i].t];
+    while(sum>S){
+      assert(!pq.empty());
+      P now=pq.top();pq.pop();
+      sum-=now.w*now.cnt,sum+=(now.w/2)*now.cnt;
+      pq.push({now.w/2,now.cnt});
+      ans++;
+    }
+    cout<<ans<<'\n';
+    rep(i,0,n+1)cnt[i]=0;
+  }
   return 0;
 }

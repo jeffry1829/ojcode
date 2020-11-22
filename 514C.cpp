@@ -45,7 +45,7 @@
 #pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
 using namespace std;
-#define int long long
+//#define int long long
 #define rep(i,a,n) for(int i=a;i<n;i++)
 #define per(i,a,n) for(int i=n-1;i>=a;i--)
 #define pb push_back
@@ -62,7 +62,7 @@ typedef long long ll;
 typedef pair<int,int> PII;
 typedef double db;
 mt19937 mrand(random_device{}());
-const ll mod=1000000007;
+const ll mod=1e9+7;
 int rnd(int x){return mrand()%x;}
 ll powmod(ll a,ll b){ll res=1;a%=mod;assert(b>=0);for(;b;b>>=1){if(b&1)res=res*a%mod;a=a*a%mod;}return res;}
 ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
@@ -73,27 +73,28 @@ inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 #define left aijhgpiaejhgp
 //#define end aononcncnccc
 //head
-const int _n=2e5+10;
-int t,n,a[_n],b[_n],c[_n],uu,vv,ans[_n];
-VI G[_n];
-PII dfs(int v,int fa){
-  PII cnt;cnt.fi=0,cnt.se=0;
-  if(b[v]!=c[v]){
-    if(b[v]==0)cnt.fi++;
-    else cnt.se++;
-  }
-  for(int u:G[v])if(u!=fa){
-    PII res=dfs(u,v);
-    if(a[v]>=a[u])
-      cnt.fi+=res.fi-min(res.fi,res.se),cnt.se+=res.se-min(res.fi,res.se),ans[v]+=ans[u];
-    else cnt.fi+=res.fi,cnt.se+=res.se,ans[v]+=ans[u]-2ll*a[u]*min(res.fi,res.se);
-  }ans[v]+=a[v]*min(cnt.fi,cnt.se)*2ll;
-  return cnt;
+const int _n=6e5+10,p=123;
+int t,n,m,len,pn[_n];
+char s[_n];
+unordered_set<int> have;
+int dhash(char s[]) {  //direct hash
+  int len = strlen(s);
+  int res = 0;
+  for (int i = 1; i <= len; i++) res = (res * 1ll * p + s[i - 1] * 1ll) % mod;
+  return res;
 }
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
-  cin>>n;rep(i,1,n+1)cin>>a[i]>>b[i]>>c[i];
-  rep(i,0,n-1){cin>>uu>>vv;G[uu].pb(vv),G[vv].pb(uu);}
-  PII res=dfs(1,0);if(res.fi!=res.se)cout<<"-1\n";
-  else cout<<ans[1]<<'\n';
+  cin>>n>>m;pn[0]=1;rep(i,1,_n)pn[i]=1ll*pn[i-1]*p%mod;
+  rep(i,0,n){cin>>s;have.insert(dhash(s));}
+  while(m--){
+    cin>>s;len=strlen(s);int hash=dhash(s);rep(i,0,len){
+      char _=s[i];rep(j,1,3){
+        char c=(_-'a'+j)%3+'a';
+        int h=(1ll*hash-1ll*pn[len-i-1]*_+1ll*pn[len-i-1]*c+3ll*mod)%mod;
+        if(have.count(h)){cout<<"YES\n";/*cout<<i<<' '<<j<<' '<<h<<'\n';*/goto A;}
+      }
+    }cout<<"NO\n";
+    A:;
+  }
   return 0;
 }

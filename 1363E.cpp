@@ -74,26 +74,26 @@ inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 //#define end aononcncnccc
 //head
 const int _n=2e5+10;
-int t,n,a[_n],b[_n],c[_n],uu,vv,ans[_n];
+int t,n,a[_n],b[_n],c[_n],uu,vv,cost;
 VI G[_n];
-PII dfs(int v,int fa){
-  PII cnt;cnt.fi=0,cnt.se=0;
+PII dfs(int v,int fa,int mn){
+  PII cnt;cnt.fi=0,cnt.se=0;mn=min(mn,a[v]);
   if(b[v]!=c[v]){
     if(b[v]==0)cnt.fi++;
     else cnt.se++;
   }
   for(int u:G[v])if(u!=fa){
-    PII res=dfs(u,v);
-    if(a[v]>=a[u])
-      cnt.fi+=res.fi-min(res.fi,res.se),cnt.se+=res.se-min(res.fi,res.se),ans[v]+=ans[u];
-    else cnt.fi+=res.fi,cnt.se+=res.se,ans[v]+=ans[u]-2ll*a[u]*min(res.fi,res.se);
-  }ans[v]+=a[v]*min(cnt.fi,cnt.se)*2ll;
+    PII res=dfs(u,v,mn);
+    cnt.fi+=res.fi,cnt.se+=res.se;
+  }cost+=mn*min(cnt.fi,cnt.se)*2ll;
+  int z=min(cnt.fi,cnt.se);
+  cnt.fi-=z,cnt.se-=z;
   return cnt;
 }
 main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
   cin>>n;rep(i,1,n+1)cin>>a[i]>>b[i]>>c[i];
   rep(i,0,n-1){cin>>uu>>vv;G[uu].pb(vv),G[vv].pb(uu);}
-  PII res=dfs(1,0);if(res.fi!=res.se)cout<<"-1\n";
-  else cout<<ans[1]<<'\n';
+  PII res=dfs(1,0,2e9);if(res.fi!=res.se)cout<<"-1\n";
+  else cout<<cost<<'\n';
   return 0;
 }

@@ -1,4 +1,4 @@
-//注意:Z-algo的Z[i]代表從i開始的(0-base)
+//注意:Z-algo的Z[i]代表從i開始的(0-base) //n好像=LEN=長度?
 int L = 0, R = 0;
 for (int i = 1; i < LEN; i++) {
   if (i > R) {
