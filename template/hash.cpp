@@ -1,7 +1,8 @@
+//https://codeforces.com/blog/entry/60445
 #include <bits/stdc++.h>
 using namespace std;
 const int _N = 10010;  // str len
-const int _p1 = 29, _M = 1000000009;
+const int _p1 = 97, _M = 1000000009;
 int pnM[_N] = {0};  // p^n mod M
 int hp[_N] = {0};   // hash prefix
 char T[_N];
