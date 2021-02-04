@@ -81,11 +81,12 @@ string s[_n],res;
 typedef unsigned long long ull; 
 //Generate random p in (before, after) open interval:
 //max(a[i]) < p < M
-int gen_p(const int before, const int after) {
-    auto seed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-    std::mt19937 mt_rand(seed);
-    int base = std::uniform_int_distribution<int>(before+1, after)(mt_rand);
-    return base % 2 == 0 ? base-1 : base;
+int gen_p(int before,int after) {
+  auto seed = chrono::high_resolution_clock::now().time_since_epoch().count();
+  mt19937 mt_rand(seed);
+  int p=uniform_int_distribution<int>(before+1,after)(mt_rand);
+  //p needs to be odd
+  return (p&1)?p:p-1;
 }
 struct PolyHash{
   static const int M=1e9+123; //M2=2^64, which use the fact that ull automatically % 2^64
