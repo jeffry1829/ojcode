@@ -15,3 +15,8 @@ struct custom_hash  // 手写的 hash 函数
 };
 unordered_map<long long, int, custom_hash> safe_map;
 gp_hash_table<long long, int, custom_hash> safe_hash_table;
+
+// To use rapidly
+#include <ext/pb_ds/assoc_container.hpp>
+__gnu_pbds::gp_hash_table<string, int> mp;
+__gnu_pbds::gp_hash_table<int, int> mp;

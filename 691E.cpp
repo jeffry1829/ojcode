@@ -44,9 +44,6 @@
 #pragma GCC optimize("-fdelete-null-pointer-checks")
 #pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
-
-#include <ext/pb_ds/assoc_container.hpp>
-// __gnu_pbds::gp_hash_table<string, int> mp;
 using namespace std;
 // #define int long long
 #define rep(i, a, n) for (int i = a; i < n; i++)
@@ -88,12 +85,61 @@ inline int pmod(int x, int d) {
 #define left aijhgpiaejhgp
 // #define end aononcncnccc
 // head
-const int _n = 1e5 + 10;
-int t, n, m;
+const int _n = 100 + 10;
+ll n, k, a[_n];
+struct Mat {
+ public:
+  int rlen, clen;
+  vector<vector<int>> _a;
+  Mat(int rlen, int clen) : rlen(rlen), clen(clen) {
+    _a = vector<vector<int>>(rlen, vector<int>(clen, 0));
+  }
+  Mat operator*(const Mat& rhs) const {
+    Mat res(this->rlen, rhs.clen);
+    rep(i, 0, res.rlen) rep(j, 0, res.clen) {
+      res._a[i][j] = 0;
+      rep(k, 0, this->clen) res._a[i][j] = (1ll * res._a[i][j] + 1ll * (_a[i][k] % mod) * (rhs._a[k][j] % mod)) % mod;
+    }
+    return res;
+  }
+  Mat operator^(ll b) {
+    Mat res(rlen, clen), tmp = *this;
+    assert(rlen == clen);
+    rep(i, 0, rlen) {
+      res._a[i][i] = 1;
+    }
+    while (b) {
+      if (b & 1ll) res = res * tmp;
+      b >>= 1ll;
+      tmp = tmp * tmp;
+    }
+    return res;
+  }
+};
 main(void) {
   ios_base::sync_with_stdio(0);
   cin.tie(0);
   cout.tie(0);
+  cin >> n >> k;
+  Mat G(n, n);
+  Mat z(n, 1);
+  rep(i, 0, n) {
+    cin >> a[i];
+    z._a[i][0] = 1;
+  }
 
+  rep(i, 0, n) {
+    rep(j, 0, n) {
+      if (__builtin_popcountll(a[i] ^ a[j]) % 3 == 0) {
+        G._a[i][j] = 1;
+      }
+    }
+  }
+  z = (G ^ (k - 1)) * z;
+  ll ans = 0;
+  rep(i, 0, n) {
+    ans = (1ll * ans + 1ll * z._a[i][0]) % mod;
+  }
+  cout << ans << '\n';
   return 0;
 }

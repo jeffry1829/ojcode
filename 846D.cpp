@@ -44,9 +44,6 @@
 #pragma GCC optimize("-fdelete-null-pointer-checks")
 #pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
-
-#include <ext/pb_ds/assoc_container.hpp>
-// __gnu_pbds::gp_hash_table<string, int> mp;
 using namespace std;
 // #define int long long
 #define rep(i, a, n) for (int i = a; i < n; i++)
@@ -88,12 +85,65 @@ inline int pmod(int x, int d) {
 #define left aijhgpiaejhgp
 // #define end aononcncnccc
 // head
-const int _n = 1e5 + 10;
-int t, n, m;
+const int _n = 500 + 10;
+int n, m, k, q, tv[_n][_n], cnt[_n][_n];
+struct Query {
+  int x, y, t;
+  bool operator<(const auto& rhs) const {
+    return t < rhs.t;
+  }
+};
+vector<Query> qs;
+bool hasKxK(int qsIdx) {
+  int time = qs[qsIdx].t;
+  memset(cnt, 0, sizeof(cnt));
+  cnt[0][0] = tv[0][0] <= time ? 1 : 0;
+  rep(i, 1, n + 1) {
+    cnt[i][0] = cnt[i - 1][0] + (tv[i][0] <= time ? 1 : 0);
+  }
+  rep(j, 1, m + 1) {
+    cnt[0][j] = cnt[0][j - 1] + (tv[0][j] <= time ? 1 : 0);
+  }
+  rep(i, 1, n + 1) {
+    rep(j, 1, m + 1) {
+      cnt[i][j] = cnt[i - 1][j] + cnt[i][j - 1] - cnt[i - 1][j - 1] + (tv[i][j] <= time ? 1 : 0);
+    }
+  }
+  rep(i, k, n + 1) {
+    rep(j, k, m + 1) {
+      int cntInKxK = cnt[i][j] - cnt[i - k][j] - cnt[i][j - k] + cnt[i - k][j - k];
+      if (cntInKxK == k * k) return true;
+    }
+  }
+  return false;
+}
 main(void) {
   ios_base::sync_with_stdio(0);
   cin.tie(0);
   cout.tie(0);
+  cin >> n >> m >> k >> q;
+  rep(i, 0, n + 1) rep(j, 0, m + 1) {
+    tv[i][j] = 0x7f7f7f7f;
+  }
+  rep(i, 0, q) {
+    int x, y, t;
+    cin >> x >> y >> t;
+    qs.pb(Query{x, y, t});
+    tv[x][y] = t;
+  }
+  sort(all(qs));
+  int MAXB = (int)log2(qs.size()) + 2;
+  int tmp = -1;
+  per(i, 0, MAXB) {
+    if ((tmp + (1 << i)) < qs.size() and !hasKxK(tmp + (1 << i))) {
+      tmp = tmp + (1 << i);
+    }
+  }
+  if (tmp == qs.size() - 1) {
+    cout << -1 << '\n';
+  } else {
+    cout << qs[tmp + 1].t << '\n';
+  }
 
   return 0;
 }
