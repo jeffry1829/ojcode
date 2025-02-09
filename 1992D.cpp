@@ -44,9 +44,6 @@
 #pragma GCC optimize("-fdelete-null-pointer-checks")
 #pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
-
-#include <ext/pb_ds/assoc_container.hpp>
-// __gnu_pbds::gp_hash_table<string, int> mp;
 using namespace std;
 // #define int long long
 #define rep(i, a, n) for (int i = a; i < n; i++)
@@ -88,12 +85,92 @@ inline int pmod(int x, int d) {
 #define left aijhgpiaejhgp
 // #define end aononcncnccc
 // head
-const int _n = 1e5 + 10;
-int t, n, m;
+const int _n = 2e5 + 10;
+int t, n, m, k;
+VI w, c, l;
+char ch, a[_n];
 main(void) {
   ios_base::sync_with_stdio(0);
   cin.tie(0);
   cout.tie(0);
-
+  cin >> t;
+  while (t--) {
+    cin >> n >> m >> k;
+    w.clear();
+    c.clear();
+    l.clear();
+    cin.get(ch);
+    a[0] = 'L';
+    a[n + 1] = 'L';
+    rep(i, 1, n + 1) {
+      cin.get(ch);
+      // cout << ch << endl;
+      a[i] = ch;
+      if (ch == 'W') {
+        w.pb(i);
+      } else if (ch == 'C') {
+        c.pb(i);
+      } else {
+        l.pb(i);
+      }
+    }
+    l.pb(n + 1);
+    int farest = 0;
+    rep(i, 0, SZ(l)) {
+      if (a[farest] == 'L' and l[i] - farest <= m) {
+        farest = l[i];
+        // cout << 1 << endl;
+      } else if (a[farest] == 'L' and l[i] - farest > m) {
+        // int maxjump = min(m, k);
+        // farest += maxjump;
+        // k -= maxjump;
+        // cout << 2 << endl;
+        farest += m;
+        i--;
+      } else if (a[farest] == 'W' and l[i] - farest <= k) {
+        bool hasC = false;
+        rep(j, farest + 1, l[i]) {
+          if (a[j] == 'C') {
+            hasC = true;
+            break;
+          }
+        }
+        if (!hasC) {
+          k -= l[i] - farest;
+          farest = l[i];
+        } else {
+          break;
+        }
+      } else if (a[farest] == 'W' and l[i] - farest > k) {
+        break;
+      } else {
+        break;
+      }
+    }
+    // cout << "farest:" << farest << endl;
+    bool ok = true;
+    rep(i, 0, SZ(l)) {
+      if (l[i] > farest) {
+        ok = false;
+        break;
+      }
+    }
+    // cout << "ok" << ok << endl;
+    rep(i, 0, SZ(c)) {
+      if (c[i] >= farest) {
+        ok = false;
+        break;
+      }
+    }
+    // cout << "ok" << ok << endl;
+    if (n + 1 - farest > k and n + 1 - farest > m) ok = false;
+    // cout << "ok" << ok << endl;
+    if (ok) {
+      cout << "YES\n";
+    } else {
+      cout << "NO\n";
+    }
+    cin.get(ch);
+  }
   return 0;
 }

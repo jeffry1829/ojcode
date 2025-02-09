@@ -44,9 +44,6 @@
 #pragma GCC optimize("-fdelete-null-pointer-checks")
 #pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
-
-#include <ext/pb_ds/assoc_container.hpp>
-// __gnu_pbds::gp_hash_table<string, int> mp;
 using namespace std;
 // #define int long long
 #define rep(i, a, n) for (int i = a; i < n; i++)
@@ -94,6 +91,32 @@ main(void) {
   ios_base::sync_with_stdio(0);
   cin.tie(0);
   cout.tie(0);
-
+  cin >> t;
+  while (t--) {
+    cin >> n;
+    vector<PII> res;
+    string strn = to_string(n);
+    int dign = strn.size();
+    rep(a, 1, 10001) {
+      int wrongdigna = dign * a;
+      int digna = to_string(n * a).size();
+      for (int b = max(wrongdigna - digna, 1); b < wrongdigna and b < n * a; b++) {
+        int correct = n * a - b;
+        string strcorrect = to_string(correct);
+        // dign*a-b
+        string strwrong;
+        rep(i, 0, dign * a - b) {
+          strwrong += strn[i % dign];
+        }
+        if (strwrong == strcorrect) {
+          res.pb({a, b});
+        }
+      }
+    }
+    cout << SZ(res) << '\n';
+    rep(i, 0, SZ(res)) {
+      cout << res[i].fi << ' ' << res[i].se << '\n';
+    }
+  }
   return 0;
 }

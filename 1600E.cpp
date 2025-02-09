@@ -44,9 +44,6 @@
 #pragma GCC optimize("-fdelete-null-pointer-checks")
 #pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
-
-#include <ext/pb_ds/assoc_container.hpp>
-// __gnu_pbds::gp_hash_table<string, int> mp;
 using namespace std;
 // #define int long long
 #define rep(i, a, n) for (int i = a; i < n; i++)
@@ -88,12 +85,59 @@ inline int pmod(int x, int d) {
 #define left aijhgpiaejhgp
 // #define end aononcncnccc
 // head
-const int _n = 1e5 + 10;
-int t, n, m;
+const int _n = 2e5 + 10;
+int t, n, a[_n];
+VI seqL, seqR;
 main(void) {
   ios_base::sync_with_stdio(0);
   cin.tie(0);
   cout.tie(0);
+  cin >> n;
+  rep(i, 0, n) {
+    cin >> a[i];
+  }
+  seqL.pb(a[0]);
+  rep(i, 1, n) {
+    if (a[i] <= a[i - 1]) break;
+    seqL.pb(a[i]);
+  }
+  seqR.pb(a[n - 1]);
+  per(i, 0, n - 1) {
+    if (a[i] <= a[i + 1]) break;
+    seqR.pb(a[i]);
+  }
+  string first = "Alice", second = "Bob";
+  int lenL = SZ(seqL), lenR = SZ(seqR);
+  int idxL = 0, idxR = 0;
+  while (1) {
+    if (idxR == SZ(seqR)) {
+      if (lenL % 2 == 1) {
+        cout << first << '\n';
+        return 0;
+      } else {
+        cout << second << '\n';
+        return 0;
+      }
+    }
+
+    if (seqL[idxL] < seqR[idxR]) {
+      swap(seqL, seqR);
+      swap(lenL, lenR);
+      swap(idxL, idxR);
+    }
+    if (lenL % 2 == 1) {
+      cout << first << '\n';
+      return 0;
+    }
+    if (seqL[idxL] == seqR[idxR] and (lenL % 2 == 1 or lenR % 2 == 1)) {
+      cout << first << '\n';
+      return 0;
+    }
+
+    idxR++;
+    lenR--;
+    swap(first, second);
+  }
 
   return 0;
 }

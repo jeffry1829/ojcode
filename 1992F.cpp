@@ -46,8 +46,9 @@
 #include <bits/stdc++.h>
 
 #include <ext/pb_ds/assoc_container.hpp>
-// __gnu_pbds::gp_hash_table<string, int> mp;
+#include <ext/pb_ds/hash_policy.hpp>
 using namespace std;
+using namespace __gnu_pbds;
 // #define int long long
 #define rep(i, a, n) for (int i = a; i < n; i++)
 #define per(i, a, n) for (int i = n - 1; i >= a; i--)
@@ -60,7 +61,8 @@ using namespace std;
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 #define abs(x) (((x) < 0) ? (-(x)) : (x))
-typedef vector<int> VI;
+typedef vector<int>
+    VI;
 typedef long long ll;
 typedef pair<int, int> PII;
 typedef double db;
@@ -88,12 +90,45 @@ inline int pmod(int x, int d) {
 #define left aijhgpiaejhgp
 // #define end aononcncnccc
 // head
-const int _n = 1e5 + 10;
-int t, n, m;
+const int _n = 2e5 + 10;
+int t, n, m, x, vis[_n];
+ll a[_n];
 main(void) {
   ios_base::sync_with_stdio(0);
   cin.tie(0);
   cout.tie(0);
-
+  cin >> t;
+  while (t--) {
+    memset(vis, 0, sizeof(vis));
+    cin >> n >> x;
+    int ans = 1;
+    rep(i, 0, n) cin >> a[i];
+    vector<ll> currentnumbers;
+    currentnumbers.pb(a[0]);
+    vis[a[0]] = ans;
+    rep(i, 1, n) {
+      vector<ll> newnumbers;
+      for (ll prevnum : currentnumbers) {
+        ll newnum = prevnum * a[i];
+        newnumbers.pb(newnum);
+      }
+      newnumbers.pb(a[i]);
+      rep(j, 0, SZ(newnumbers)) {
+        ll newnum = newnumbers[j];
+        if (newnum < x and x % newnum == 0 and vis[newnum] != ans) {
+          currentnumbers.pb(newnum);
+          vis[newnum] = ans;
+        }
+        if (newnum == x) {
+          ans++;
+          currentnumbers.clear();
+          currentnumbers.pb(a[i]);
+          vis[a[i]] = ans;
+          break;
+        }
+      }
+    }
+    cout << ans << '\n';
+  }
   return 0;
 }

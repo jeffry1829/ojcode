@@ -44,9 +44,6 @@
 #pragma GCC optimize("-fdelete-null-pointer-checks")
 #pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
-
-#include <ext/pb_ds/assoc_container.hpp>
-// __gnu_pbds::gp_hash_table<string, int> mp;
 using namespace std;
 // #define int long long
 #define rep(i, a, n) for (int i = a; i < n; i++)
@@ -90,10 +87,64 @@ inline int pmod(int x, int d) {
 // head
 const int _n = 1e5 + 10;
 int t, n, m;
-main(void) {
-  ios_base::sync_with_stdio(0);
-  cin.tie(0);
-  cout.tie(0);
-
-  return 0;
+class Solution {
+ public:
+  map<string, int> ans;
+  string curele = "";
+  string curnum = "";
+  // int curidx = 0;
+  void addAtom(string atom, string strcnt, map<string, int> &mp) {
+    int cnt = 0;
+    if (atom == "") return;
+    if (strcnt = "") {
+      cnt = 1;
+    } else {
+      cnt = stoi(strcnt);
+    }
+    if (mp.count(atom)) {
+      mp[atom] += cnt;
+    } else {
+      mp[atom] = cnt;
+    }
+  }
+  map<string, int> solve(string formula, int st) {
+    map<string, int> res;
+    for (int i = st, i < formula.size(); i++) {
+      if (formula[i] >= 'A' and formula[i] <= 'Z') {
+        addAtom(curele, curnum, res);
+        curele = formula[i];
+      } else if (formula[i] >= 'a' and formula[i] <= 'z') {
+        curele += formula[i];
+      } else if (formula[i] >= '0' and formula[i] <= '9') {
+        curnum += formula[i];
+      } else if (formula[i] == '(') {
+        map<string, int> tmp = solve(formula, i + 1);
+        for (int j = i + 1; j < formula.size(); j++) {
+          if (formula[j] == ')') {
+            i = j + 1;
+            break;
+          }
+        }
+        for (int j = i; j < formula.size(); j++) {
+          if (formula[j] >= '0' and formula[j] <= '9') {
+            curnum += formula[j];
+          } else {
+            break;
+          }
+        }
+        for (auto it : tmp) {
+          if (res.count(it.first)) {
+            res[it.first] += it.second * stoi(curnum);
+          } else {
+            res[it.first] = it.second * stoi(curnum);
+          }
+        }
+      } else if (formula[i] == ')') {
+      }
+    }
+  }
+} string countOfAtoms(string formula) {
+  solve(formula, 0);
 }
+}
+;

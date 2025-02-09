@@ -44,9 +44,6 @@
 #pragma GCC optimize("-fdelete-null-pointer-checks")
 #pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
-
-#include <ext/pb_ds/assoc_container.hpp>
-// __gnu_pbds::gp_hash_table<string, int> mp;
 using namespace std;
 // #define int long long
 #define rep(i, a, n) for (int i = a; i < n; i++)
@@ -89,11 +86,28 @@ inline int pmod(int x, int d) {
 // #define end aononcncnccc
 // head
 const int _n = 1e5 + 10;
-int t, n, m;
+int t, n, m, k, a[_n];
 main(void) {
   ios_base::sync_with_stdio(0);
   cin.tie(0);
   cout.tie(0);
-
+  cin >> t;
+  while (t--) {
+    cin >> n >> k;
+    rep(i, 0, k) cin >> a[i];
+    int maxidx = 0;
+    rep(i, 1, k) {
+      if (a[i] > a[maxidx]) {
+        maxidx = i;
+      }
+    }
+    ll ans = 0;
+    rep(i, 0, k) {
+      if (i != maxidx) {
+        ans += 2ll * a[i] - 1ll;
+      }
+    }
+    cout << ans << '\n';
+  }
   return 0;
 }

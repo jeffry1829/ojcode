@@ -1,5 +1,5 @@
-// #pragma GCC optimize(1)
-// #pragma GCC optimize(2)
+//#pragma GCC optimize(1)
+//#pragma GCC optimize(2)
 #pragma GCC optimize(3)
 #pragma GCC optimize("Ofast")
 #pragma GCC optimize("inline")
@@ -44,56 +44,51 @@
 #pragma GCC optimize("-fdelete-null-pointer-checks")
 #pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
-
-#include <ext/pb_ds/assoc_container.hpp>
-// __gnu_pbds::gp_hash_table<string, int> mp;
 using namespace std;
-// #define int long long
-#define rep(i, a, n) for (int i = a; i < n; i++)
-#define per(i, a, n) for (int i = n - 1; i >= a; i--)
+//#define int long long
+#define rep(i,a,n) for(int i=a;i<n;i++)
+#define per(i,a,n) for(int i=n-1;i>=a;i--)
 #define pb push_back
-// #define mp make_pair
-#define all(x) (x).begin(), (x).end()
+//#define mp make_pair
+#define all(x) (x).begin(),(x).end()
 #define fi first
 #define se second
 #define SZ(x) ((int)(x).size())
-#define min(a, b) (((a) < (b)) ? (a) : (b))
-#define max(a, b) (((a) > (b)) ? (a) : (b))
-#define abs(x) (((x) < 0) ? (-(x)) : (x))
+#define min(a,b) (((a)<(b))?(a):(b))
+#define max(a,b) (((a)>(b))?(a):(b))
+#define abs(x) (((x)<0)?(-(x)):(x))
 typedef vector<int> VI;
 typedef long long ll;
-typedef pair<int, int> PII;
+typedef pair<int,int> PII;
 typedef double db;
 mt19937 mrand(random_device{}());
-const ll mod = 1000000007;
-int rnd(int x) { return mrand() % x; }
-ll powmod(ll a, ll b) {
-  ll res = 1;
-  a %= mod;
-  assert(b >= 0);
-  for (; b; b >>= 1) {
-    if (b & 1) res = res * a % mod;
-    a = a * a % mod;
-  }
-  return res;
-}
-ll gcd(ll a, ll b) { return b ? gcd(b, a % b) : a; }
-inline int pmod(int x, int d) {
-  int m = x % d;
-  return m + ((m >> 31) & d);
-}
+const ll mod=1000000007;
+int rnd(int x){return mrand()%x;}
+ll powmod(ll a,ll b){ll res=1;a%=mod;assert(b>=0);for(;b;b>>=1){if(b&1)res=res*a%mod;a=a*a%mod;}return res;}
+ll gcd(ll a, ll b){return b?gcd(b,a%b):a;}
+inline int pmod(int x, int d){int m = x%d;return m+((m>>31)&d);}
 #define y1 ojsapogjahg
 #define prev ojaposjdas
 #define rank oiajgpowsdjg
 #define left aijhgpiaejhgp
-// #define end aononcncnccc
-// head
-const int _n = 1e5 + 10;
-int t, n, m;
-main(void) {
-  ios_base::sync_with_stdio(0);
-  cin.tie(0);
-  cout.tie(0);
-
+//#define end aononcncnccc
+//head
+const int _n=1e5+10;
+int t,n,m,k;
+vector<pair<int,string>> ans,ans2;
+main(void) {ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+  cin>>n>>m>>k; if(4*n*m-2*n-2*m<k){cout<<"NO\n";return 0;}
+  cout<<"YES\n";
+  rep(i,0,n-1)ans.pb({1,"D"}),ans.pb({m-1,"R"}),ans.pb({m-1,"UDL"});
+  ans.pb({n-1,"U"}),ans.pb({m-1,"R"}),ans.pb({m-1,"L"});
+  for(auto now:ans){
+    if(k-now.fi*SZ(now.se)<0){
+      if(k/SZ(now.se)!=0)ans2.pb({k/SZ(now.se),now.se});
+      if(k%SZ(now.se)!=0)ans2.pb({1,now.se.substr(0,k%SZ(now.se))});
+      break;
+    }
+    if(k-now.fi*SZ(now.se)>=0 and now.fi!=0)ans2.pb(now),k-=now.fi*SZ(now.se);
+  }cout<<SZ(ans2)<<'\n';
+  for(auto now:ans2)cout<<now.fi<<' '<<now.se<<'\n';
   return 0;
 }

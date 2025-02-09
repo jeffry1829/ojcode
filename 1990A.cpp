@@ -44,9 +44,6 @@
 #pragma GCC optimize("-fdelete-null-pointer-checks")
 #pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
-
-#include <ext/pb_ds/assoc_container.hpp>
-// __gnu_pbds::gp_hash_table<string, int> mp;
 using namespace std;
 // #define int long long
 #define rep(i, a, n) for (int i = a; i < n; i++)
@@ -88,12 +85,38 @@ inline int pmod(int x, int d) {
 #define left aijhgpiaejhgp
 // #define end aononcncnccc
 // head
-const int _n = 1e5 + 10;
-int t, n, m;
+const int _n = 50 + 10;
+int t, n, m, a[_n], numbercnt[_n];
 main(void) {
   ios_base::sync_with_stdio(0);
   cin.tie(0);
   cout.tie(0);
-
+  cin >> t;
+  while (t--) {
+    cin >> n;
+    int maxx = 0;
+    int maxxcnt = 0;
+    memset(numbercnt, 0, sizeof(numbercnt));
+    rep(i, 0, n) {
+      cin >> a[i];
+      maxx = max(maxx, a[i]);
+      numbercnt[a[i]]++;
+    }
+    bool hasodd = false;
+    rep(i, 0, n) {
+      if (a[i] == maxx) {
+        maxxcnt++;
+      }
+      if (a[i] != maxx and numbercnt[a[i]] % 2 == 1) {
+        hasodd = true;
+      }
+    }
+    // if (maxxcnt % 2 == 1 or (maxxcnt % 2 == 0 and n % 2 == 1) or n == 1) {
+    if (maxxcnt % 2 == 1 or (maxxcnt % 2 == 0 and hasodd)) {
+      cout << "Yes\n";
+    } else {
+      cout << "No\n";
+    }
+  }
   return 0;
 }

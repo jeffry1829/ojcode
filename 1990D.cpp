@@ -86,7 +86,7 @@ inline int pmod(int x, int d) {
 // #define end aononcncnccc
 // head
 const int _n = 2e5 + 10;
-int t, n, m, a[_n];
+int t, n, m, a[_n], dp[_n];
 main(void) {
   ios_base::sync_with_stdio(0);
   cin.tie(0);
@@ -94,38 +94,104 @@ main(void) {
   cin >> t;
   while (t--) {
     cin >> n;
-    rep(i, 1, n + 1) cin >> a[i];
-    int ans = 0;
-    int remain = 0;
-    rep(i, 1, n + 1) {
-      if (a[i] == 0) {
-        remain = 0;
-      } else if (a[i] <= 2) {
-        if (remain == 2) {
-          remain = 0;
-        } else {  // remain = 0 or 4
-          remain = 2;
-          ans++;
-        }
-      } else if (a[i] <= 4) {
-        if (remain == 4) {
-          remain = 2;
-          ans++;
-        } else if (remain == 2) {
-          remain = 4;
-          ans++;
-        } else {  // remain = 0
-          remain = 0;
-          ans++;
-        }
-      } else if (a[i] > 4) {
-        remain = 0;
-        ans++;
-      } else {
-        cout << "erroer" << endl;
-      }
+    rep(i, 0, n + 1) { dp[i] = 0; }
+    rep(i, 1, n + 1) { cin >> a[i]; }
+    int prev2 = -1, prev4 = -1;
+    dp[0] = 0;
+    if (a[1] > 0) {
+      dp[1] = 1;
+    } else {
+      dp[1] = 0;
     }
-    cout << ans << '\n';
+    if (a[1] <= 2) prev2 = 1;
+    if (a[1] <= 4 and a[1] > 2) prev4 = 1;
+    if (a[2] > 0) {
+      dp[2] = dp[1] + 1;
+    } else {
+      dp[2] = dp[1];
+    }
+    if (a[2] <= 2) prev2 = 2;
+    if (a[2] <= 4 and a[2] > 2) prev2 = 4;
+    if (a[1] <= 2 and a[2] <= 2) {
+      dp[2] = min(dp[2], 1);
+    }
+    rep(i, 3, n + 1) {
+      if (a[i] > 4) {
+        if (prev2 == -1) {
+          dp[i] = dp[i - 1] + 1;
+          prev2 = -2;
+          prev4 = -2;
+        } else if (prev2 != -1 and prev4 <= prev2) {
+          dp[i] = dp[i - 1] + 1;
+          prev2 = -2;
+          prev4 = -2;
+        } else if ((prev2 != -1 and prev4 > prev2) or i == n) {
+          dp[i] = dp[i - 1] + i + 1 - prev2;
+          prev2 = -2;
+          prev4 = -2;
+        } else {
+          cout << "error\n";
+        }
+        // dp[i] = dp[i - 1] + 1;
+        // prev2 = -2;
+        // prev4 = -2;
+      } else if (a[i] <= 4 and a[i] > 2) {
+        if (prev2 == -1) {
+          dp[i] = dp[i - 1] + 1;
+        } else if (prev2 != -1 and prev4 < prev2) {
+          dp[i] = dp[i - 1];
+        } else if ((prev2 != -1 and prev4 > prev2) or i == n) {
+          dp[i] = dp[i - 1];
+        } else {
+          cout << "error\n";
+        }
+      } else if (a[i] <= 2 and a[i] > 0) {
+        if (prev2 == -1) {
+          dp[i] = dp[i - 1] + 1;
+        } else if (prev2 != -1 and prev4 < prev2) {
+          dp[i] = dp[i - 1];
+          prev2 = -2;
+          prev4 = -2;
+        } else if ((prev2 != -1 and prev4 > prev2) or i == n) {
+          dp[i] = dp[i - 1] + i - prev2 + 1 - (i - prev2 > 2);
+          prev2 = -2;
+          prev4 = -2;
+        } else {
+          cout << "error\n";
+        }
+      } else if (a[i] == 0) {
+        if (prev2 == -1) {
+          dp[i] = dp[i - 1];
+          prev2 = -2;
+          prev4 = -2;
+        } else if (prev2 != -1 and prev4 < prev2) {
+          dp[i] = dp[i - 1];
+          prev2 = -2;
+          prev4 = -2;
+        } else if ((prev2 != -1 and prev4 > prev2) or i == n) {
+          dp[i] = dp[i - 1] + i - prev2;
+          prev2 = -2;
+          prev4 = -2;
+        } else {
+          cout << "error\n";
+        }
+      }
+      if (prev2 != -2 and a[i] <= 2) prev2 = i;
+      if (prev4 != -2 and a[i] <= 4 and a[i] > 2) prev4 = i;
+      if (prev2 == -2) prev2 = -1;
+      if (prev4 == -2) prev4 = -1;
+      // int poss1 = dp[i - 1] + (a[i] > 0);
+      // int poss2 = poss1;
+      // int poss3 = poss1;
+      // if (i - 3 > 0 and a[i - 3] <= 2 and a[i - 2] <= 4 and a[i - 1] <= 4 and a[i] <= 2) {
+      //   poss2 = dp[i - 4] + 3;
+      // }
+      // if (a[i - 1] <= 2 and a[i] <= 2) {
+      //   poss3 = dp[i - 2] + 1;
+      // }
+      // dp[i] = min(poss1, min(poss2, poss3));
+    }
+    cout << dp[n] << '\n';
   }
   return 0;
 }

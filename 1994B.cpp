@@ -44,9 +44,6 @@
 #pragma GCC optimize("-fdelete-null-pointer-checks")
 #pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
-
-#include <ext/pb_ds/assoc_container.hpp>
-// __gnu_pbds::gp_hash_table<string, int> mp;
 using namespace std;
 // #define int long long
 #define rep(i, a, n) for (int i = a; i < n; i++)
@@ -88,12 +85,49 @@ inline int pmod(int x, int d) {
 #define left aijhgpiaejhgp
 // #define end aononcncnccc
 // head
-const int _n = 1e5 + 10;
-int t, n, m;
+const int _n = 2e5 + 10;
+int q, n, m, s[_n], t[_n], has1[_n];
 main(void) {
   ios_base::sync_with_stdio(0);
   cin.tie(0);
   cout.tie(0);
-
+  cin >> q;
+  while (q--) {
+    cin >> n;
+    char c;
+    cin.get(c);
+    rep(i, 1, n + 1) {
+      cin.get(c);
+      s[i] = c - '0';
+    }
+    cin.get(c);
+    rep(i, 1, n + 1) {
+      cin.get(c);
+      t[i] = c - '0';
+    }
+    cin.get(c);
+    // if (s[1] == 0) has0[1] = q + 1;
+    // if (s[1] == 1) has1[1] = q + 1;
+    bool can = true;
+    rep(i, 1, n + 1) {
+      // if (s[i] == 0 or has0[i - 1] == q + 1) has0[i] = q + 1;
+      if (s[i] == 1 or has1[i - 1] == q + 1) has1[i] = q + 1;
+      if (s[i] != t[i]) {
+        if (s[i] == 0 and has1[i] != q + 1) {
+          can = false;
+          break;
+        }
+        if (s[i] == 1 and has1[i] != q + 1) {
+          can = false;
+          break;
+        }
+      }
+    }
+    if (can) {
+      cout << "YES" << '\n';
+    } else {
+      cout << "NO" << '\n';
+    }
+  }
   return 0;
 }

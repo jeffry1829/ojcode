@@ -44,9 +44,6 @@
 #pragma GCC optimize("-fdelete-null-pointer-checks")
 #pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
-
-#include <ext/pb_ds/assoc_container.hpp>
-// __gnu_pbds::gp_hash_table<string, int> mp;
 using namespace std;
 // #define int long long
 #define rep(i, a, n) for (int i = a; i < n; i++)
@@ -88,12 +85,55 @@ inline int pmod(int x, int d) {
 #define left aijhgpiaejhgp
 // #define end aononcncnccc
 // head
-const int _n = 1e5 + 10;
-int t, n, m;
+const int _n = 500 + 10;
+int t, n, m, aij[_n][_n], bij[_n][_n], rowdif[_n], coldif[_n];
 main(void) {
   ios_base::sync_with_stdio(0);
   cin.tie(0);
   cout.tie(0);
-
+  cin >> t;
+  while (t--) {
+    cin >> n >> m;
+    rep(i, 0, n) rep(j, 0, m) {
+      char c;
+      cin.get(c);
+      if (c == '\n') cin.get(c);
+      aij[i][j] = c - '0';
+    }
+    rep(i, 0, n) rep(j, 0, m) {
+      char c;
+      cin.get(c);
+      if (c == '\n') cin.get(c);
+      bij[i][j] = c - '0';
+    }
+    memset(rowdif, 0, sizeof(rowdif));
+    memset(coldif, 0, sizeof(coldif));
+    rep(i, 0, n) {
+      rep(j, 0, m) {
+        rowdif[i] = (rowdif[i] + aij[i][j] - bij[i][j] + 3) % 3;
+      }
+    }
+    rep(i, 0, m) {
+      rep(j, 0, n) {
+        coldif[i] = (coldif[i] + aij[j][i] - bij[j][i] + 3) % 3;
+      }
+    }
+    bool ok = true;
+    rep(i, 0, n) {
+      if (rowdif[i] != 0) {
+        ok = false;
+        break;
+      }
+    }
+    rep(i, 0, m) {
+      if (coldif[i] != 0) {
+        ok = false;
+        break;
+      }
+    }
+    cout << (ok ? "YES" : "NO") << "\n";
+    char c;
+    cin.get(c);
+  }
   return 0;
 }

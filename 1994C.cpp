@@ -44,9 +44,6 @@
 #pragma GCC optimize("-fdelete-null-pointer-checks")
 #pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
-
-#include <ext/pb_ds/assoc_container.hpp>
-// __gnu_pbds::gp_hash_table<string, int> mp;
 using namespace std;
 // #define int long long
 #define rep(i, a, n) for (int i = a; i < n; i++)
@@ -88,12 +85,44 @@ inline int pmod(int x, int d) {
 #define left aijhgpiaejhgp
 // #define end aononcncnccc
 // head
-const int _n = 1e5 + 10;
-int t, n, m;
+const int _n = 2e5 + 10, MAXB = 19;
+ll t, n, m, x, a[_n], dp[_n], sum[_n], fac[_n];  // sum to zero and tail in i
 main(void) {
   ios_base::sync_with_stdio(0);
   cin.tie(0);
   cout.tie(0);
-
+  cin >> t;
+  while (t--) {
+    cin >> n >> x;
+    sum[0] = 0;
+    rep(i, 1, n + 1) {
+      cin >> a[i];
+      sum[i] = sum[i - 1] + a[i];
+    }
+    dp[n + 1] = 0;
+    dp[n] = a[n] > x ? 1 : 0;
+    per(i, 1, n) {
+      int idx = i;
+      per(j, 0, MAXB) {
+        if (idx + (1ll << j) <= n and sum[idx + (1ll << j)] - sum[i - 1] <= x) {
+          idx += (1ll << j);
+        }
+      }
+      // cout << "idx:" << idx << endl;
+      if (idx == n) {
+        dp[i] = 0;
+      } else if (idx == i and a[i] > x) {
+        dp[i] = dp[idx + 1] + 1;
+      } else {
+        dp[i] = dp[idx + 2] + 1;
+      }
+    }
+    ll ans = 0;
+    // rep(i, 1, n + 1) {
+    //   cout << "dp[" << i << "]:" << dp[i] << endl;
+    // }
+    rep(i, 1, n + 1) { ans += dp[i]; }
+    cout << (n * (n - 1) / 2) + n - ans << '\n';
+  }
   return 0;
 }

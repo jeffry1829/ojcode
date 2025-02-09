@@ -44,9 +44,6 @@
 #pragma GCC optimize("-fdelete-null-pointer-checks")
 #pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
-
-#include <ext/pb_ds/assoc_container.hpp>
-// __gnu_pbds::gp_hash_table<string, int> mp;
 using namespace std;
 // #define int long long
 #define rep(i, a, n) for (int i = a; i < n; i++)
@@ -88,12 +85,72 @@ inline int pmod(int x, int d) {
 #define left aijhgpiaejhgp
 // #define end aononcncnccc
 // head
-const int _n = 1e5 + 10;
-int t, n, m;
+const int _n = 100;
+int t, a[_n], b[_n], seven = 0, seventeen = 0, n, k;
 main(void) {
   ios_base::sync_with_stdio(0);
   cin.tie(0);
   cout.tie(0);
-
+  cin >> t;
+  while (t--) {
+    seven = seventeen = 0;
+    bool outt = false;
+    cin >> n >> k;
+    rep(i, 0, n) cin >> b[i];
+    rep(i, 0, n) {
+      if (b[i] == 7)
+        seven += 1;
+      else if (b[i] == 17)
+        seventeen += 1;
+      else if (b[i] == 119)
+        seven += 1, seventeen += 1;
+      else if (b[i] == 289)
+        seventeen += 2;
+      else if (b[i] == 2023)
+        seventeen += 2,
+            seven += 1;
+      else if (b[i] == 1) {
+      } else {
+        cout << "No\n";
+        outt = 1;
+        break;
+      }
+    }
+    if (outt) continue;
+    if (seven < 2 and seventeen < 3 and 1 <= k) {
+      cout << "Yes\n";
+      if (k == 1 and seven == 0 and seventeen == 0) {
+        cout << "2023 ";
+        seven = 1;
+        seventeen = 2;
+        k--;
+      }
+      if (k == 1 and seven == 0 and seventeen == 1) {
+        cout << "119 ";
+        seven = 1;
+        seventeen = 2;
+        k--;
+      }
+      if (seven == 0) {
+        cout << "7 ";
+        seven++;
+        k--;
+      }
+      if (seventeen < 2) {
+        if (seventeen == 0) {
+          cout << "289 ";
+          seventeen += 2;
+        } else if (seventeen == 1) {
+          cout << "17 ";
+          seventeen += 1;
+        }
+        k--;
+      }
+      rep(i, 0, k) cout << "1 ";
+      cout << "\n";
+    } else {
+      cout << "No\n";
+    }
+  }
   return 0;
 }

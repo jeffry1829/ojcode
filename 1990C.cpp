@@ -44,9 +44,6 @@
 #pragma GCC optimize("-fdelete-null-pointer-checks")
 #pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
-
-#include <ext/pb_ds/assoc_container.hpp>
-// __gnu_pbds::gp_hash_table<string, int> mp;
 using namespace std;
 // #define int long long
 #define rep(i, a, n) for (int i = a; i < n; i++)
@@ -88,12 +85,48 @@ inline int pmod(int x, int d) {
 #define left aijhgpiaejhgp
 // #define end aononcncnccc
 // head
-const int _n = 1e5 + 10;
-int t, n, m;
+const int _n = 2e5 + 10;
+ll t, n, m, a[_n], b[_n], cnt[_n];
 main(void) {
   ios_base::sync_with_stdio(0);
   cin.tie(0);
   cout.tie(0);
-
+  cin >> t;
+  while (t--) {
+    cin >> n;
+    memset(cnt, 0, (n + 1) * sizeof(ll));
+    ll maxdup = 0;
+    rep(i, 1, n + 1) {
+      cin >> a[i];
+      cnt[a[i]]++;
+      if (cnt[a[i]] > 1 and maxdup < a[i]) {
+        maxdup = a[i];
+      }
+      b[i] = maxdup;
+    }
+    ll sum = 0;
+    rep(i, 1, n + 1) {
+      sum += a[i];
+      sum += b[i];
+    }
+    memset(cnt, 0, (n + 1) * sizeof(ll));
+    maxdup = 0;
+    rep(i, 1, n + 1) {
+      cnt[b[i]]++;
+      if (cnt[b[i]] > 1 and maxdup < b[i]) {
+        maxdup = b[i];
+      }
+      b[i] = maxdup;
+    }
+    // turn b into prefix sum
+    b[0] = 0;
+    rep(i, 2, n + 1) {
+      b[i] += b[i - 1];
+    }
+    per(i, 1, n + 1) {
+      sum += b[i];
+    }
+    cout << sum << "\n";
+  }
   return 0;
 }
