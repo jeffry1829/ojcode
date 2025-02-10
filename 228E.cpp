@@ -98,7 +98,7 @@ void dfs(int v, int fa) {
   st.push(v);
   for (int u : G[v]) {
     if (!id[u]) dfs(u, v);
-    if (u != fa and !scc[u]) low[v] = min(low[v], low[u]);
+    if (!scc[u]) low[v] = min(low[v], low[u]);
   }
   if (low[v] == id[v]) {
     int temp;
@@ -116,6 +116,7 @@ main(void) {
   rep(i, 0, m) {
     int a, b, c;
     cin >> a >> b >> c;
+    a--, b--;
     // G[a].pb(b);
     if (c) {
       G[a * 2 + 1].pb(b * 2 + 1);  // x*2 false, x*2+1 true
@@ -124,9 +125,9 @@ main(void) {
       G[b * 2].pb(a * 2);
     } else {
       G[a * 2 + 1].pb(b * 2);
+      G[b * 2 + 1].pb(a * 2);
       G[b * 2].pb(a * 2 + 1);
       G[a * 2].pb(b * 2 + 1);
-      G[b * 2].pb(a * 2 + 1);
     }
   }
   rep(i, 0, n) {
@@ -147,7 +148,7 @@ main(void) {
   rep(i, 0, n) {
     // scc比較小的 出現在拓樸排序的比較後面
     if (scc[i * 2 + 1] < scc[i * 2]) {
-      ans.pb(i / 2);
+      ans.pb(i + 1);
     }
   }
   cout << ans.size() << '\n';
