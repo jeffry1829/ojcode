@@ -85,7 +85,19 @@
         "xstring": "cpp",
         "xtree": "cpp",
         "ranges": "cpp",
-        "span": "cpp"
+        "span": "cpp",
+        "optional": "cpp",
+        "bit": "cpp",
+        "charconv": "cpp",
+        "compare": "cpp",
+        "concepts": "cpp",
+        "locale": "cpp",
+        "stop_token": "cpp",
+        "xfacet": "cpp",
+        "xlocbuf": "cpp",
+        "xlocinfo": "cpp",
+        "xmemory": "cpp",
+        "xtr1common": "cpp"
     },
     "python.linting.pylintEnabled": false,
     "julia.executablePath": "C:/Users/petjelinux/AppData/Local/Julia-1.0.2/bin/julia.exe"

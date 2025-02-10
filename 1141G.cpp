@@ -88,12 +88,65 @@ inline int pmod(int x, int d) {
 #define left aijhgpiaejhgp
 // #define end aononcncnccc
 // head
-const int _n = 1e5 + 10;
-int t, n, m;
+const int _n = 2e5 + 10;
+int t, n, k, id[_n], T = 0, color[_n];
+bool canBeNotGood[_n];
+struct E {
+  int v, num;
+};
+vector<E> G[_n];
+void dfs(int v) {
+  id[v] = ++T;
+  int colorToDraw = 1;
+  int faColor = 0;
+  rep(i, 0, SZ(G[v])) {
+    if (id[G[v][i].v]) {
+      faColor = color[G[v][i].num];
+    }
+  }
+  rep(i, 0, SZ(G[v])) {
+    if (!id[G[v][i].v]) {
+      if (canBeNotGood[v]) {
+        color[G[v][i].num] = 1;
+      } else {
+        if (colorToDraw == faColor) colorToDraw++;
+        color[G[v][i].num] = colorToDraw;
+        colorToDraw++;
+      }
+      dfs(G[v][i].v);
+    }
+  }
+}
 main(void) {
   ios_base::sync_with_stdio(0);
   cin.tie(0);
   cout.tie(0);
+  cin >> n >> k;
+  rep(i, 0, n - 1) {
+    int x, y;
+    cin >> x >> y;
+    x--, y--;
+    G[x].pb({y, i});
+    G[y].pb({x, i});
+  }
+  vector<int> cities;
+  rep(i, 0, n) cities.pb(i);
+  sort(all(cities), [](int& lhs, int& rhs) {
+    return G[lhs].size() > G[rhs].size();
+  });
+  rep(i, 0, k) {
+    canBeNotGood[cities[i]] = 1;
+  }
+  dfs(0);
 
+  int ansR = 0;
+  rep(i, 0, n - 1) {
+    ansR = max(ansR, color[i]);
+  }
+  cout << ansR << '\n';
+  rep(i, 0, n - 1) {
+    cout << color[i] << ' ';
+  }
+  cout << '\n';
   return 0;
 }
