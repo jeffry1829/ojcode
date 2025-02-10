@@ -95,9 +95,7 @@ main(void) {
   while (t--) {
     cin >> n;
     rep(i, 0, n + 1) { dp[i] = 0; }
-    rep(i, 1, n + 1) {
-      cin >> a[i];
-    }
+    rep(i, 1, n + 1) { cin >> a[i]; }
     int prev2 = -1, prev4 = -1;
     dp[0] = 0;
     if (a[1] > 0) {

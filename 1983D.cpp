@@ -85,54 +85,9 @@ inline int pmod(int x, int d) {
 #define left aijhgpiaejhgp
 // #define end aononcncnccc
 // head
-const int _n = 5e3 + 10;
-ll t, n, m, par[_n];
-VI child[_n];
-ll a[_n];
-struct dpnode {
-  ll cost;
-  vector<ll> remain;
-};
-dpnode dp[_n];
-void dfs(int v) {
-  // dp[v].cost = 0;
-  // dp[v].remain.clear();
-  if (SZ(child[v]) == 0) {
-    dp[v].cost = 0;
-    dp[v].remain.pb(1e15 * 1ll);
-    return;
-  }
-  rep(i, 0, SZ(child[v])) {
-    int c = child[v][i];
-    dfs(c);
-    dp[v].cost += dp[c].cost;
-  }
-  vector<ll> new_remain;
-  ll cur_sum = 0;
-  new_remain.push_back(0ll);  // place holder
-  rep(i, 0, SZ(dp[child[v][0]].remain)) { new_remain.pb(dp[child[v][0]].remain[i]); }
-  // new_remain.emplace_back(dp[child[v][0]].remain);
-  cur_sum += a[child[v][0]];
-  rep(i, 1, SZ(child[v])) {
-    cur_sum += a[child[v][i]];
-    rep(j, 0, SZ(dp[child[v][i]].remain)) {
-      if (SZ(new_remain) < j + 2) new_remain.push_back(0ll);
-      new_remain[j + 1] += (dp[child[v][i]].remain[j]);
-    }
-  }
-  new_remain[0] = max(0ll, cur_sum - a[v]);
-  dp[v].remain = new_remain;
-  ll to_add = max(0ll, a[v] - cur_sum);
-  dp[v].cost += to_add;
-  rep(i, 1, SZ(dp[v].remain)) {
-    ll cur_remain = dp[v].remain[i];
-    ll cur_to_add = max(0ll, to_add - cur_remain);
-    dp[v].cost += cur_to_add;
-    dp[v].remain[i] = max(0ll, dp[v].remain[i] - cur_to_add);
-    to_add -= min(to_add, cur_remain);
-    if (to_add == 0) break;
-  }
-}
+const int _n = 2e5 + 10;
+int t, n, m, aparity, bparity;
+int cur[_n], inv_cur[_n], a[_n], b[_n];
 main(void) {
   ios_base::sync_with_stdio(0);
   cin.tie(0);
@@ -140,16 +95,61 @@ main(void) {
   cin >> t;
   while (t--) {
     cin >> n;
-    rep(i, 0, n + 1) child[i].clear();
-    rep(i, 0, n + 1) dp[i].cost = 0;
-    rep(i, 0, n + 1) dp[i].remain.clear();
-    rep(i, 1, n + 1) cin >> a[i];  // 1-indexed
-    rep(i, 2, n + 1) {
-      cin >> par[i];
-      child[par[i]].pb(i);
+    rep(i, 0, n) { cin >> a[i]; }
+    rep(i, 0, n) { cin >> b[i]; }
+    auto do_cycle = [&](int i, int j, int k) {
+      int tmp = cur[k];
+      cur[k] = cur[j];
+      cur[j] = cur[i];
+      cur[i] = tmp;
+
+      inv_cur[cur[i]] = i;
+      inv_cur[cur[j]] = j;
+      inv_cur[cur[k]] = k;
+    };
+    std::copy(a, a + n, cur);
+    std::sort(cur, cur + n);
+    rep(i, 0, n) inv_cur[cur[i]] = i;
+    aparity = bparity = 0;
+    rep(i, 0, n - 2) {
+      if (cur[i] != a[i] and inv_cur[a[i]] != n - 1) {
+        do_cycle(n - 1, inv_cur[a[i]], i);
+      } else if (cur[i] != a[i] and inv_cur[a[i]] == n - 1) {
+        do_cycle(n - 2, inv_cur[a[i]], i);
+      }
     }
-    dfs(1);
-    cout << dp[1].cost << '\n';
+    if (cur[n - 1] != a[n - 1])
+      aparity = 1;  // odd
+    else
+      aparity = 0;  // even
+    std::copy(b, b + n, cur);
+    std::sort(cur, cur + n);
+    rep(i, 0, n) inv_cur[cur[i]] = i;
+    rep(i, 0, n - 2) {
+      if (cur[i] != b[i] and inv_cur[b[i]] != n - 1) {
+        do_cycle(n - 1, inv_cur[b[i]], i);
+      } else if (cur[i] != b[i] and inv_cur[b[i]] == n - 1) {
+        do_cycle(n - 2, inv_cur[b[i]], i);
+      }
+    }
+    if (cur[n - 1] != b[n - 1])
+      bparity = 1;  // odd
+    else
+      bparity = 0;  // even
+    sort(a, a + n);
+    sort(b, b + n);
+    bool sameelems = true;
+    rep(i, 0, n) {
+      if (a[i] != b[i]) {
+        sameelems = false;
+        break;
+      }
+    }
+    if (aparity == bparity and sameelems)
+      cout << "YES\n";
+    else
+      cout << "NO\n";
   }
+
   return 0;
 }

@@ -90,22 +90,23 @@ ll t, n, m, a[_n], x, y;
 vector<ll> E[_n];
 ll vis[_n];
 // 0: taken first, 1: taken second
-ll dp[_n][5];
+ll dp[_n][20];
+ll minall(int v, int except) {
+  ll minn = 6e18;
+  rep(i, 0, 20) {
+    if (i != except) {
+      minn = min(minn, dp[v][i]);
+    }
+  }
+  return minn;
+}
 void dfs(ll v, ll visnum) {
   vis[v] = visnum;
-  dp[v][0] = a[v];
-  dp[v][1] = 2ll * a[v];
-  dp[v][2] = 3ll * a[v];
-  dp[v][3] = 4ll * a[v];
-  dp[v][4] = 5ll * a[v];
+  rep(i, 0, 20) { dp[v][i] = 1ll * (i + 1) * a[v]; }
   for (auto u : E[v]) {
     if (vis[u] != visnum) {
       dfs(u, visnum);
-      dp[v][0] += min(dp[u][1], min(dp[u][2], min(dp[u][3], dp[u][4])));
-      dp[v][1] += min(dp[u][0], min(dp[u][2], min(dp[u][3], dp[u][4])));
-      dp[v][2] += min(dp[u][0], min(dp[u][1], min(dp[u][3], dp[u][4])));
-      dp[v][3] += min(dp[u][0], min(dp[u][1], min(dp[u][2], dp[u][4])));
-      dp[v][4] += min(dp[u][0], min(dp[u][1], min(dp[u][2], dp[u][3])));
+      rep(i, 0, 20) { dp[v][i] += minall(u, i); }
     }
   }
 }
@@ -116,19 +117,15 @@ main(void) {
   cin >> t;
   while (t--) {
     cin >> n;
-    rep(i, 0, n + 1) {
-      E[i].clear();
-    }
-    rep(i, 1, n + 1) {
-      cin >> a[i];
-    }
+    rep(i, 0, n + 1) { E[i].clear(); }
+    rep(i, 1, n + 1) { cin >> a[i]; }
     rep(i, 0, n - 1) {
       cin >> x >> y;
       E[x].pb(y);
       E[y].pb(x);
     }
     dfs(1, t + 1);
-    cout << min(dp[1][0], min(dp[1][1], min(dp[1][2], min(dp[1][3],dp[1][4])))) << '\n';
+    cout << minall(1, -1) << '\n';
   }
   return 0;
 }
