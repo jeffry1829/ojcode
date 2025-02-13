@@ -1,9 +1,8 @@
 // #pragma GCC optimize(1)
 // #pragma GCC optimize(2)
-// #pragma GCC optimize(3)
+#pragma GCC optimize(3)
 #pragma GCC optimize("Ofast")
 #pragma GCC optimize("inline")
-#pragma GCC optimize("Ofast", "unroll-loops", "march=native")
 #pragma GCC optimize("-fgcse")
 #pragma GCC optimize("-fgcse-lm")
 #pragma GCC optimize("-fipa-sra")
@@ -12,7 +11,7 @@
 #pragma GCC optimize("-fpeephole2")
 #pragma GCC optimize("-ffast-math")
 #pragma GCC optimize("-fsched-spec")
-// #pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("unroll-loops")
 #pragma GCC optimize("-falign-jumps")
 #pragma GCC optimize("-falign-loops")
 #pragma GCC optimize("-falign-labels")
@@ -46,11 +45,8 @@
 // #pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
 
-// #include <ext/pb_ds/assoc_container.hpp>
-// #include <bits/extc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
 // __gnu_pbds::gp_hash_table<string, int> mp;
-// __gnu_pbds::priority_queue<long long, decltype([](long long& a, long long& b) { return a > b; })> pq;
-// using namespace __gnu_pbds;
 using namespace std;
 // #define int long long
 #define rep(i, a, n) for (int i = a; i < n; i++)
@@ -98,6 +94,27 @@ main(void) {
   ios_base::sync_with_stdio(0);
   cin.tie(0);
   cout.tie(0);
+  cin >> t;
+  while (t--) {
+    cin >> n;
+    int q1, q11, q10;
+    cout << "1 1" << endl;
+    cin >> q1;
+    cout << "1 11" << endl;
+    cin >> q11;
+    cout << "1 10" << endl;
+    cin >> q10;
+    if (q1 == q11 + q10) {
+      cout << "0 " << n << " 0" << endl;
+    } else {
+      cout << "0 " << n << " 1" << endl;
+    }
+    int res;
+    cin >> res;
+    if (res == -1) {
+      return 0;
+    }
+  }
 
   return 0;
 }
