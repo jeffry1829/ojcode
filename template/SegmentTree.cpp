@@ -106,6 +106,7 @@ void push(int v) {
   if (laz[v] != 0) apply(2 * v + 1, laz[v]), apply(2 * v + 2, laz[v]), laz[v] = 0;
 }
 void build(int v, int l, int r) {
+  laz[v] = 0;
   if (l + 1 == r)
     t[v] = s[l];
   else {
@@ -207,6 +208,7 @@ void push(int v) {
   if (laz[v] != 0) apply(2 * v + 1, laz[v]), apply(2 * v + 2, laz[v]), laz[v] = 0;
 }
 void build(int v, int l, int r) {
+  laz[v] = 0;
   if (l + 1 == r)
     t[v] = s[l];
   else {
