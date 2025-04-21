@@ -46,11 +46,8 @@
 // #pragma comment(linker, "/STACK:1024000000,1024000000")
 #include <bits/stdc++.h>
 
-// #include <ext/pb_ds/assoc_container.hpp>
-// #include <bits/extc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
 // __gnu_pbds::gp_hash_table<string, int> mp;
-// __gnu_pbds::priority_queue<long long, decltype([](long long& a, long long& b) { return a > b; })> pq;
-// using namespace __gnu_pbds;
 using namespace std;
 // #define int long long
 #define rep(i, a, n) for (int i = a; i < n; i++)
@@ -92,12 +89,50 @@ inline int pmod(int x, int d) {
 #define left aijhgpiaejhgp
 // #define end aononcncnccc
 // head
-const int _n = 1e5 + 10;
-int t, n, m;
+const int _n = 51;
+ll n, k, possibility[_n];
 main(void) {
   ios_base::sync_with_stdio(0);
   cin.tie(0);
   cout.tie(0);
-
+  cin >> n >> k;
+  // 1-indexed
+  possibility[0] = 1;
+  possibility[1] = 1;
+  possibility[2] = 2;
+  for (int i = 3; i <= n; i++) {
+    possibility[i] = possibility[i - 1] + possibility[i - 2];
+  }
+  vector<int> ansseq;  // 1 for 1 cycle, 2 for 2 cycle
+  ll k2 = k;
+  int i = 0;
+  while (i < n) {
+    // i = idx before making new cycle length decision
+    if (possibility[n - i - 1] >= k2) {
+      ansseq.push_back(1);
+      i += 1;
+    } else {
+      k2 -= possibility[n - i - 1];
+      ansseq.push_back(2);
+      i += 2;
+    }
+  }
+  vector<int> ans;
+  for (int i = 1; i <= n; i++) {
+    ans.push_back(i);
+  }
+  int idx = 0;
+  for (int i = 0; i < (int)ansseq.size(); i++) {
+    if (ansseq[i] == 1) {
+      idx++;
+    } else {
+      swap(ans[idx], ans[idx + 1]);
+      idx += 2;
+    }
+  }
+  for (int x : ans) {
+    cout << x << ' ';
+  }
+  cout << '\n';
   return 0;
 }
