@@ -13,7 +13,8 @@ class Seg {
     nodes[v].val = nodes[2 * v + 1].val + nodes[2 * v + 2].val;
   }
   void apply(int v, ll val) {
-    nodes[v].val = val, laz[v].val = val;
+    nodes[v].val = val;
+    laz[v].val = val;
   }
   void push(int v) {
     if (laz[v].val != -1) {  // 正常來說要判斷laz != 0，這邊是因為這題需要才用-1
